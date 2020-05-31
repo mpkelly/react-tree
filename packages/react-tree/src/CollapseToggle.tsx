@@ -18,8 +18,8 @@ export const CollapseToggle = (props: CollapseToggleProps) => {
   }
   return (
     <div
-      data-rtk-collapse-toggle
-      data-rtk-collapsed={collapsed}
+      data-rt-collapse-toggle
+      data-rt-collapsed={collapsed}
       onClick={() => handleToggleCollapse(node)}
     >
       {children}

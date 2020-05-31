@@ -122,11 +122,11 @@ export const Tree = (props: TreeProps) => {
       }
       let props: any = {};
       if (node.id === overId && overId !== node.parentId) {
-        props["data-rtk-drop-valid"] = true;
+        props["data-rt-drop-valid"] = true;
       }
 
       result.push(
-        <div data-rtk-element {...props}>
+        <div data-rt-element {...props}>
           <TreeElement node={node} depth={depth}>
             {nodeItem}
           </TreeElement>
@@ -150,7 +150,7 @@ export const Tree = (props: TreeProps) => {
 
   return (
     <TreeContext.Provider value={value}>
-      <div data-rtk-tree>{tree}</div>
+      <div data-rt-tree>{tree}</div>
     </TreeContext.Provider>
   );
 };

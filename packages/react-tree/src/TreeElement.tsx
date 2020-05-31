@@ -40,7 +40,7 @@ export const useTreeElement = (props: TreeElementProps) => {
 
   if (!dragDisabled) {
     onDragStart = (event) => {
-      event.dataTransfer.setData("text/rtk-id", String(node.id));
+      event.dataTransfer.setData("text/rt-id", String(node.id));
       event.dataTransfer.dropEffect = "move";
       handleDrag(node.id);
     };
@@ -60,7 +60,7 @@ export const useTreeElement = (props: TreeElementProps) => {
     (event) => {
       event.preventDefault();
       if (overId && overId == node.id) {
-        const id = event.dataTransfer.getData("text/rtk-id");
+        const id = event.dataTransfer.getData("text/rt-id");
         handleDrop(id, node.id);
       }
     },
@@ -68,9 +68,9 @@ export const useTreeElement = (props: TreeElementProps) => {
   );
 
   const elementProps: Object = {
-    "data-rtk-node": node.id,
-    "data-rtk-type": node.type,
-    "data-rtk-depth": depth,
+    "data-rt-node": node.id,
+    "data-rt-type": node.type,
+    "data-rt-depth": depth,
     draggable: !dragDisabled,
     onDragStart,
     onDragOver,
