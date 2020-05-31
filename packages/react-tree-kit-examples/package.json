@@ -1,0 +1,46 @@
+{
+  "name": "react-tree-kit-examples",
+  "version": "0.0.1",
+  "description": "Examples for react-tree-kit",
+  "keywords": [
+    "example",
+    "react",
+    "typescript",
+    "tree",
+    "drag",
+    "drop",
+    "sorted"
+  ],
+  "author": "mkelly <kikemelly@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-async-to-generator": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/polyfill": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "@babel/runtime": "^7.9.6",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "*",
+    "source-map-loader": "^0.2.4",
+    "terser-webpack-plugin": "^2.3.6",
+    "typescript": "^3.9.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-glob": "^2.0.2"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-tree-kit": "*"
+  },
+  "scripts": {
+    "watch": "webpack -w --mode=development",
+    "dist": "webpack --mode=production"
+  }
+}

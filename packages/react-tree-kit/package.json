@@ -1,0 +1,44 @@
+{
+  "name": "react-tree-kit",
+  "version": "0.0.1",
+  "description": "Drag and drop tree for ReactJS",
+  "keywords": [
+    "react",
+    "typescript",
+    "tree",
+    "drag",
+    "drop",
+    "sorted"
+  ],
+  "author": "mkelly <kikemelly@gmail.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/Index.d.ts",
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-async-to-generator": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/polyfill": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "@babel/runtime": "^7.9.6",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "*",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "source-map-loader": "^0.2.4",
+    "terser-webpack-plugin": "^2.3.6",
+    "typescript": "^3.9.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-glob": "^2.0.2"
+  },
+  "scripts": {
+    "watch": "webpack -w --mode=development",
+    "typings": "tsc -d --emitDeclarationOnly --allowJs false --esModuleInterop true --skipLibCheck true --jsx react --outDir ./dist src/Index.ts",
+    "dist": "webpack --mode=production && npm run typings"
+  }
+}

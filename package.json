@@ -1,0 +1,21 @@
+{
+  "name": "react-tree-kit",
+  "version": "0.0.1",
+  "description": "Drag and drop tree for ReactJS",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "tree",
+    "drag",
+    "drop",
+    "sorted"
+  ],
+  "author": "mpkelly",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.22.0"
+  }
+}
