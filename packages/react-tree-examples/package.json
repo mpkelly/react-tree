@@ -1,7 +1,7 @@
 {
-  "name": "react-tree-kit-examples",
+  "name": "react-tree-examples",
   "version": "0.0.1",
-  "description": "Examples for react-tree-kit",
+  "description": "Examples for @mpkelly/react-tree-kit",
   "keywords": [
     "example",
     "react",
@@ -37,7 +37,7 @@
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-tree-kit": "*"
+    "@mpkelly/react-tree": "*"
   },
   "scripts": {
     "watch": "webpack -w --mode=development",

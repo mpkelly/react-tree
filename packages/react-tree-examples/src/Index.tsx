@@ -7,7 +7,7 @@ import {
   Tree,
   CollapseToggle,
   Schema,
-} from "react-tree-kit";
+} from "@mpkelly/react-tree";
 
 // THE DATA
 
