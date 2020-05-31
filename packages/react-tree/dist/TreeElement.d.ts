@@ -7,4 +7,3 @@ export interface TreeElementProps {
     dragDisabled?: boolean;
 }
 export declare const TreeElement: (props: TreeElementProps) => JSX.Element;
-export declare const useTreeElement: (props: TreeElementProps) => Object;

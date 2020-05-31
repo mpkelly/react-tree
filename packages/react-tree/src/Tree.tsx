@@ -82,27 +82,27 @@ export const Tree = (props: TreeProps) => {
         setOverId(undefined);
         return;
       }
-      //Don't allow drop on self
+      // Don't allow drop on self
       if (dragId === overId) {
         return;
       }
       const dragNode = nodes.find((node) => node.id === dragId);
       if (dragNode) {
-        //Don't allow dropping into s existing parent
+        // Don't allow dropping into s existing parent
         if (dragNode.parentId == overId) {
           return false;
         }
         const overNode = nodes.find((node) => node.id === overId);
         if (overNode) {
-          // Only allow dropping into declared types, if set
           const search = findTreeNodeById(dragId as NodeId, treeNodes);
           if (search && search.node) {
             const children = toFlatNodes(search.node.children);
-            //Don't allow dropping into a child node
+            // Don't allow dropping into a child node
             if (children.find((child) => child.id == overId)) {
               return;
             }
           }
+          // Validate against schema, if set
           if (isDropAllowed(dragNode, overNode, schema)) {
             setOverId(overId);
           }
