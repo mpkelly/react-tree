@@ -118,7 +118,7 @@ const FolderElement = (props: TreeElementProps) => {
 
 #### Styling
 
-React Tree doesn't provide styling because it doesn't render anythign by itself but it does set some data attributes on wrapper elements. Here's some styling from one of the examples:
+React Tree doesn't provide styling because it doesn't render anything by itself but it does set some data attributes on wrapper elements. Here's some styling from one of the examples:
 
 ```CSS
   
