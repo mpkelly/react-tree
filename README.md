@@ -31,7 +31,7 @@ I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-pro
 
 #### Nodes
 
-To make use of the tree you just need to provide an array of `FlatNode`. 
+To make use of the tree you just need to provide an array of `FlatNode`s. 
 
 ```TypeScript
 
@@ -80,7 +80,8 @@ const flatNodes: FlatNode[] = [
     id: 1,
     expanded: true,
     type: Type.Folder,
-       //FlatNode supports any additional properties you need
+    
+    //Note how FlatNode supports any additional properties you need
     name: "Folder one",
   },
   {
@@ -93,11 +94,11 @@ const flatNodes: FlatNode[] = [
 
 (a folder with one child of type file)
 
-If you need to do more advanced validation that can be easily described by simple type mapping then you can add a `isDropAllowed(dragNode, dropNode)` to your Schema object. This function is called after the internal sanity checks and declarative checks are passed. 
+If you need to do more advanced validation that can't be easily described by simple type mapping then you can add a `isDropAllowed(dragNode, dropNode)` to your Schema object. This function is called after the internal sanity checks and declarative checks are passed. 
 
 #### Expand / collapse
 
-React tree has a small helper component that helps you deal with toggling a node expanded/collapsed. It accepts any valid `ReactNode` as children as well as the `Node` being rendered. You can see the EXAMPLES for how to make use of this fully but the basic usage looks like:
+React Tree has a small helper component that helps you deal with toggling a node expanded/collapsed. It accepts any valid `ReactNode` as children as well as the `Node` being rendered. You can see the demoes above for how to make use of this fully but the basic usage looks like:
 
 ```TypeScript
 const FolderElement = (props: TreeElementProps) => {
@@ -105,7 +106,7 @@ const FolderElement = (props: TreeElementProps) => {
   return (
     <div className="my-folder-item" style={{ paddingLeft: depth * 16 }}>
       <CollapseToggle node={node}>
-        <ArrowRightIcon />
+        <ArrowIcon />
       </CollapseToggle> 
        <span data-element-name>{node.name}</span>
     </div>
@@ -116,7 +117,7 @@ const FolderElement = (props: TreeElementProps) => {
 
 #### Styling
 
-React Tree doesn't provide styling but does set some data attributes on wrapper elements. Here's some styling from one of the  examples:
+React Tree doesn't provide styling because it doesn't render anythign by itself but it does set some data attributes on wrapper elements. Here's some styling from one of the examples:
 
 ```CSS
   
