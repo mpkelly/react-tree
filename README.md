@@ -1,6 +1,6 @@
 # react-tree
 
-A React Tree that supports drag and drop. I wrote this out of frustration after trying several other trees. In total I must have used 5-6 trees for React but none of them felt quite right: some were too buggy and others had whacky data models or didn't allow me to do X. Hopefully you will find `react-tree` to be easy to use while doing all of the heavy lifting for you and allowing you to retain full control over appearance. 
+A React Tree that supports drag and drop. I wrote this out of frustration after trying several other trees. In total I must have used 5-6 trees for React but none of them felt quite right: some were too buggy and others had whacky data models or didn't allow me to do X. Hopefully you will find `react-tree` to be easy to use while doing all of the heavy lifting for you and allowing you to retain full control over the appearance. 
 
 ### Install
 
@@ -24,6 +24,7 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 * [ ] Dropping at precise locations in target
 * [ ] Multi-select and multi-drag and drop
 * [ ] Keyboard support and better a11y
+* [ ] Performance testing and optimisation
 
 I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last three features but they will be added once I have relaunched Journal this month. 
 
