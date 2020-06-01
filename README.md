@@ -26,7 +26,7 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 * [ ] Keyboard support and better a11y
 * [ ] Performance testing and optimisation
 
-I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last three features but they will be added once I have relaunched Journal this month. 
+I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last gew features but they will be added once I have relaunched Journal this month. 
 
 ### Basic concepts
 
