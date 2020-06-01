@@ -129,7 +129,7 @@ export const Tree = (props: TreeProps) => {
       if (dragNode) {
         // Don't allow dropping into s existing parent
         if (dragNode.parentId == overId) {
-          return false;
+          return;
         }
         const overNode = nodes.find((node) => node.id === overId);
         if (overNode) {
