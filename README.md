@@ -15,15 +15,15 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 ### Features
 
 * [x] Tiny bundle size - zero dependencies other than React
-* [x] basic drag & drop support
-* [x] simple list data model
-* [x] support for toggling expand/collapse
-* [x] custom sorting functions
-* [x] simple, declarative Schema
-* [x] exports utilities for working with nodes
-* [ ] dropping at precise locations in target
-* [ ] multi-select and multi-drag and drop
-* [ ] keyboard support and better a11y
+* [x] Basic drag & drop support
+* [x] Simple list data model
+* [x] Support for toggling expand/collapse
+* [x] Custom sorting functions
+* [x] Simple, declarative Schema
+* [x] Exports utilities for working with nodes
+* [ ] Dropping at precise locations in target
+* [ ] Multi-select and multi-drag and drop
+* [ ] Keyboard support and better a11y
 
 I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last three features but they will be added once I have relaunched Journal this month. 
 
