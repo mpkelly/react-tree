@@ -27,7 +27,6 @@ const flatNodes: FlatNode[] = [
     id: 1,
     expanded: true,
     type: Type.Folder,
-    parentId: undefined,
     //FlatNode supports any additional properties you need
     name: "Folder one",
   },
