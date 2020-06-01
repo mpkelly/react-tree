@@ -40,7 +40,7 @@ export interface FlatNode extends Node {
 }
 
 /**
- * Used by <Tree/> internally. It's jut a `FlatNode` with a children
+ * Used by <Tree/> internally. It's really just a `FlatNode` with a children[]
  * property for constructing the tree structure.
  */
 export interface TreeNode extends FlatNode {
