@@ -31,7 +31,7 @@ I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-pro
 
 #### Nodes
 
-To make use of the tree you just need to provide an array of `FlatNode`s. 
+To make use of the tree you just need to provide an array of `FlatNodes. 
 
 ```TypeScript
 
@@ -50,7 +50,7 @@ export interface FlatNode extends Node {
 }
 
 ```
-The key thing is that the Node has an `id` prop and, unless it's a root node, a `parentId` so that the library can construct a tree from it. Internally, `react-tree` converts your nodes into a `TreeNode` which it uses to render the tree. 
+The key thing is that the Node has an `id` prop and, unless it's a root node, a `parentId` so that the library can construct a tree from it. Internally, `react-tree` converts your nodes into `TreeNodes` which it uses to render the tree. 
 
 #### Schema
 
