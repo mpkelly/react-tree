@@ -67,7 +67,7 @@ enum Type {
 
 const FileSystemSchema: Schema = {
   rules: {
-      //a folder accepts folders and other files
+      //a folder accepts folders and files
       [Type.Folder]: [Type.Folder, Type.File],
 
       //empty array = accepts nothing

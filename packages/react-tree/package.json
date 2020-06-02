@@ -60,5 +60,6 @@
   },
   "dependencies": {
     "testcafe": "^1.8.6"
-  }
+  },
+  "gitHead": "bcb9141f564feca6faad81c1641f89372ef9924d"
 }
