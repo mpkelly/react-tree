@@ -1,0 +1,8 @@
+node_modules
+.awcache
+videos
+screenshots
+test
+src
+jest.config.js
+webpack*

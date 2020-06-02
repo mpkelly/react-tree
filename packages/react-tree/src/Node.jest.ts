@@ -44,15 +44,15 @@ const flat: FlatNode[] = [
 ];
 
 describe("Nodes", function () {
-  test("toFlatNodes", () => {
+  test("toFlatNodes", async () => {
     expect(toFlatNodes(tree)).toEqual(flat);
   });
 
-  test("toTreeNodes", () => {
+  test("toTreeNodes", async () => {
     expect(toTreeNodes(flat)).toEqual(tree);
   });
 
-  test("findTreeNodeById", () => {
+  test("findTreeNodeById", async () => {
     let result = findTreeNodeById(4, tree);
     expect(result?.node?.id).toEqual(4);
     expect(result?.parent?.id).toEqual(1);

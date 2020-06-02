@@ -19,7 +19,6 @@ export const useTreeElementState = (props: TreeElementProps) => {
   }
 
   let onDragStart: DragHandler | undefined = undefined;
-
   if (!dragDisabled) {
     onDragStart = (event) => {
       event.dataTransfer.setData("text/rt-id", String(node.id));
@@ -50,7 +49,7 @@ export const useTreeElementState = (props: TreeElementProps) => {
   );
 
   const elementProps: Object = {
-    "data-rt-node": node.id,
+    "data-rt-element": node.id,
     "data-rt-type": node.type,
     "data-rt-depth": depth,
     draggable: !dragDisabled,

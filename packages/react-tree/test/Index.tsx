@@ -7,9 +7,7 @@ import {
   Tree,
   CollapseToggle,
   Schema,
-} from "@mpkelly/react-tree";
-
-// THE DATA
+} from "../src";
 
 enum Type {
   File,
@@ -19,7 +17,6 @@ enum Type {
 const FileSystemSchema: Schema = {
   rules: {
     [Type.Folder]: [Type.Folder, Type.File],
-    //empty array = accepts nothing
     [Type.File]: [],
   },
 };
@@ -29,7 +26,6 @@ const flatNodes: FlatNode[] = [
     id: 1,
     expanded: true,
     type: Type.Folder,
-    //FlatNode supports any additional properties you need
     name: "Folder one",
   },
   {
@@ -52,8 +48,6 @@ const flatNodes: FlatNode[] = [
     name: "Folder two",
   },
 ];
-
-// THE UI
 
 const ArrowRightIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -121,18 +115,19 @@ const TreeElement = (props: TreeElementProps) => {
   }
 
   return (
-    <div data-tree-element style={{ paddingLeft: depth * 16 }}>
+    <div
+      data-tree-element
+      data-id={node.id}
+      style={{ paddingLeft: depth * 16 }}
+    >
       {arrow} {icon} <span data-element-name>{node.name}</span>
     </div>
   );
 };
 
-// THE STYLE - see index.html
-
 const App = () => {
   const [nodes, setNodes] = useState(flatNodes);
 
-  //Only two things can change: 'parentId' and 'expanded'
   const handleChange = (
     changed: FlatNode,
     property: keyof FlatNode,

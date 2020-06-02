@@ -8,7 +8,7 @@ enum Type {
 }
 
 describe("Schema", function () {
-  test("by rules", () => {
+  test("by rules", async () => {
     const schema: Schema = {
       rules: { [Type.a]: [Type.a, Type.b], [Type.b]: [] },
     };
@@ -35,7 +35,7 @@ describe("Schema", function () {
     expect(isDropAllowed(a, c, schema)).toBe(true);
   });
 
-  test("by function", () => {
+  test("by function", async () => {
     const schema: Schema = {
       isDropAllowed: (a, b) => true,
       rules: { [Type.b]: [] },

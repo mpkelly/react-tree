@@ -16,6 +16,7 @@
   "main": "dist/index.js",
   "typings": "dist/Index.d.ts",
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "github:4teamwork/cypress-drag-drop",
     "@babel/core": "^7.9.6",
     "@babel/plugin-transform-async-to-generator": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.6",
@@ -41,9 +42,15 @@
     "webpack-glob": "^2.0.2"
   },
   "scripts": {
-    "test": "jest",
+    "test-jest": "jest",
+    "test-testcafe": "webpack  --config ./webpack.test.config.js --mode=production && testcafe chrome ./src/Tree.testcafe.ts",
+    "test": "npm run test-jest && npm run test-testcafe",
     "watch": "webpack -w --mode=development",
     "typings": "tsc -d --emitDeclarationOnly --allowJs false --esModuleInterop true --skipLibCheck true --jsx react --outDir ./dist src/Index.ts",
-    "dist": "webpack --mode=production && npm run typings"
+    "dist": "webpack --mode=production && npm run typings",
+    "publish": "npm run dist && npm run test && npx lerna publish"
+  },
+  "dependencies": {
+    "testcafe": "^1.8.6"
   }
 }

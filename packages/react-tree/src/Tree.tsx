@@ -165,7 +165,7 @@ export const Tree = (props: TreeProps) => {
       }
 
       result.push(
-        <div data-rt-element {...props}>
+        <div data-rt-element-wrapper={node.id} {...props}>
           <TreeElement node={node} depth={depth}>
             {nodeItem}
           </TreeElement>

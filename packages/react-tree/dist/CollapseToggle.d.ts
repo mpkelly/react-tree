@@ -6,7 +6,7 @@ export interface CollapseToggleProps {
 }
 /**
  * Wraps any valid `ReactNode` and provides a click handler for
- * toggling expanded/collapsed state. You should wrap your angle
- * bracket or whatever with this.
+ * toggling between expanded/collapsed state. You should wrap your angle
+ * bracket icon or whatever with this.
  */
 export declare const CollapseToggle: (props: CollapseToggleProps) => JSX.Element;

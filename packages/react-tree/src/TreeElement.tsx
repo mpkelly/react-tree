@@ -14,7 +14,7 @@ export const TreeElement = (props: TreeElementProps) => {
   const { id } = node;
   const elementProps = useTreeElementState(props);
   return (
-    <div key={id} {...elementProps}>
+    <div key={id} draggable {...elementProps}>
       {children}
     </div>
   );
