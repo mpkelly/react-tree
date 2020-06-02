@@ -11,7 +11,15 @@
     "sorted"
   ],
   "author": "mkelly <kikemelly@gmail.com>",
-  "homepage": "",
+  "homepage": "https://github.com/mpkelly/react-tree",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mpkelly/react-tree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mpkelly/react-tree/issues"
+  },
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/Index.d.ts",
