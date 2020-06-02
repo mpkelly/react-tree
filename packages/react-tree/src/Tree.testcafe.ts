@@ -1,13 +1,13 @@
-import { Selector, ClientFunction } from "testcafe";
+import { Selector } from "testcafe";
 
 fixture`Tree`.page`../test/index.html`;
 
-const Folder1Items = '[data-rt-element-wrapper="1"] [data-rt-element]';
-const Folder2Items = '[data-rt-element-wrapper="4"] [data-rt-element]';
+const Folder1Items = '[data-rt-element-wrapper="0"] [data-rt-element]';
+const Folder2Items = '[data-rt-element-wrapper="3"] [data-rt-element]';
 
-const Folder1 = '[data-rt-element-wrapper="1"]';
-const File1 = '[data-rt-element-wrapper="2"]';
-const Folder2 = '[data-rt-element-wrapper="4"]';
+const Folder1 = '[data-rt-element-wrapper="0"]';
+const File1 = '[data-rt-element-wrapper="1"]';
+const Folder2 = '[data-rt-element-wrapper="3"]';
 
 test("Drop a file into a folder", async (t) => {
   await t.expect(Selector(Folder1Items).count).eql(4);

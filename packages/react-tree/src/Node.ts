@@ -108,7 +108,7 @@ export const toTreeNodes = (nodes: FlatNode[]): TreeNode[] => {
   nodes.forEach((node) => (table[node.id] = toTreeNode(node)));
   const tree: TreeNode[] = [];
   nodes.forEach((node) => {
-    if (node.parentId) {
+    if (node.parentId !== undefined) {
       table[node.parentId].children.push(table[node.id]);
     } else {
       tree.push(table[node.id]);

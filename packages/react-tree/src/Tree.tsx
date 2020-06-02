@@ -102,7 +102,7 @@ export const Tree = (props: TreeProps) => {
   }
 
   const handleDrop = (dropped: NodeId, target?: NodeId) => {
-    if (target) {
+    if (target !== undefined) {
       const node = nodes.find((node) => String(node.id) === String(dropped));
       if (node && String(node.parentId) !== String(target)) {
         onChange && onChange(node, "parentId", target);
@@ -128,7 +128,7 @@ export const Tree = (props: TreeProps) => {
       const dragNode = nodes.find((node) => node.id === dragId);
       if (dragNode) {
         // Don't allow dropping into s existing parent
-        if (dragNode.parentId == overId) {
+        if (dragNode.parentId === overId) {
           return;
         }
         const overNode = nodes.find((node) => node.id === overId);

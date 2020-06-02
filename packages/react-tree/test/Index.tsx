@@ -23,27 +23,27 @@ const FileSystemSchema: Schema = {
 
 const flatNodes: FlatNode[] = [
   {
-    id: 1,
+    id: 0,
     expanded: true,
     type: Type.Folder,
     name: "Folder one",
   },
   {
-    id: 2,
+    id: 1,
     type: Type.File,
-    parentId: 1,
+    parentId: 0,
     name: "File one",
   },
   {
-    id: 3,
+    id: 2,
     type: Type.File,
-    parentId: 1,
+    parentId: 0,
     name: "File two",
   },
   {
-    id: 4,
+    id: 3,
     expanded: true,
-    parentId: 1,
+    parentId: 0,
     type: Type.Folder,
     name: "Folder two",
   },
