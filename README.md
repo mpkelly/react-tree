@@ -4,36 +4,36 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 
 ### Install
 
-```npm i @mpkelly/react-tree```
+`npm i @mpkelly/react-tree`
 
 ### Demoes
 
-- Simple demo
+- [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/App.tsx)
 - Lazy children demo
 - [Journal example](https://github.com/mpkelly/Journal/blob/master/packages/journal/src/features/collections-tree/CollectionsTree.tsx)
 
 ### Features
 
-* [x] Tiny bundle size - zero dependencies other than React
-* [x] TypeScript & JavaScript support
-* [x] Basic drag & drop support
-* [x] Simple list data model
-* [x] Support for toggling expand/collapse
-* [x] Custom sorting functions
-* [x] Simple, declarative Schema
-* [x] Exports utilities for working with nodes
-* [ ] Dropping at precise locations in target
-* [ ] Multi-select and multi-drag and drop
-* [ ] Keyboard support and better a11y
-* [ ] Performance testing and optimisation
+- [x] Tiny bundle size - zero dependencies other than React
+- [x] TypeScript & JavaScript support
+- [x] Basic drag & drop support
+- [x] Simple list data model
+- [x] Support for toggling expand/collapse
+- [x] Custom sorting functions
+- [x] Simple, declarative Schema
+- [x] Exports utilities for working with nodes
+- [ ] Dropping at precise locations in target
+- [ ] Multi-select and multi-drag and drop
+- [ ] Keyboard support and better a11y
+- [ ] Performance testing and optimisation
 
-I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last few features but they will be added once I have relaunched Journal this month. 
+I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last few features but they will be added once I have relaunched Journal this month.
 
 ### API
 
 #### Nodes
 
-To make use of the tree you just need to provide an array of `FlatNodes. 
+To make use of the tree you just need to provide an array of `FlatNodes.
 
 ```TypeScript
 
@@ -52,7 +52,8 @@ export interface FlatNode extends Node {
 }
 
 ```
-The key thing is that the Node has an `id` prop and, unless it's a root node, a `parentId` so that the library can construct a tree from it. Internally, `react-tree` converts your nodes into `TreeNodes` which it uses to render the tree. 
+
+The key thing is that the Node has an `id` prop and, unless it's a root node, a `parentId` so that the library can construct a tree from it. Internally, `react-tree` converts your nodes into `TreeNodes` which it uses to render the tree.
 
 #### Schema
 
@@ -78,7 +79,7 @@ const FileSystemSchema: Schema = {
 
 You would then declare your nodes like this:
 
-``` TypeScript
+```TypeScript
 const flatNodes: FlatNode[] = [
   {
     id: 1,
@@ -98,7 +99,7 @@ const flatNodes: FlatNode[] = [
 
 (a folder with one child of type file)
 
-If you need to do more advanced validation that can't be easily described by simple type mapping then you can add a `isDropAllowed(dragNode, dropNode)` to your Schema object. This function is called after the internal sanity checks and rule checks are passed. 
+If you need to do more advanced validation that can't be easily described by simple type mapping then you can add a `isDropAllowed(dragNode, dropNode)` to your Schema object. This function is called after the internal sanity checks and rule checks are passed.
 
 #### Expand / collapse
 
@@ -111,7 +112,7 @@ const FolderElement = (props: TreeElementProps) => {
     <div className="my-folder-item" style={{ paddingLeft: depth * 16 }}>
       <CollapseToggle node={node}>
         <ArrowIcon />
-      </CollapseToggle> 
+      </CollapseToggle>
        <span data-element-name>{node.name}</span>
     </div>
   );
@@ -124,7 +125,7 @@ const FolderElement = (props: TreeElementProps) => {
 React Tree doesn't provide styling because it doesn't render anything by itself but it does set some data attributes on wrapper elements. Here's some styling from one of the examples:
 
 ```CSS
-  
+ 
     // This property is set on a node when another node that it can accept as a child is dragged over it - you will want to use some visual indicator so the user knows they can release
     [data-rt-drop-valid] {
       background-color: rgba(0, 0, 0, .1);
@@ -134,7 +135,7 @@ React Tree doesn't provide styling because it doesn't render anything by itself 
     [data-rt-collapsed="false"] {
       transform: rotate(90deg);
     }
-    
+   
     // always set on the <CollapseToggle/> wrapper element
     [data-rt-collapse-toggle] {
       transition: transform .3s;
@@ -160,9 +161,9 @@ The `onChange` callback should look something like this:
     value: any
   ) => {
     const nextNode = {...node, [property]:value};
-    
+   
     //call setState or whatever
-    handleNodeChange(nextNode); 
+    handleNodeChange(nextNode);
   };
 ```
 
@@ -180,9 +181,9 @@ if (result && result.node) {
 
   //Convert the sub-tree to a flat array and then convert that to an array of ids
   const ids = toFlatNodes([result.node]).map((node) => node.id);
-  
+ 
   // Now just call your DB or API to delete them
-  deleteAllById(ids); 
+  deleteAllById(ids);
 }
 
 ```
@@ -191,24 +192,25 @@ if (result && result.node) {
 
 The Tree API. Note how most properties are optional
 
-``` TypeScript
+```TypeScript
 export interface TreeProps {
 
   // Your node array from the DB or API
   nodes: FlatNode[];  
-  
+ 
   // A function that renders your node. You can easily convert the depth into horizontal padding
   renderElement(node: TreeNode, depth: number): JSX.Element;
 
   // Change events are fired when the `expanded` property changes or the `parentId` changes
   onChange?(node: FlatNode, property: keyof FlatNode, value: any): void;
-  
+ 
   // You will typical want to set this using the exported `createAlphaNumericSort` function e.g. `createAlphaNumericSort("name") to sort your items by the Node's name property. If not set items will be appended into their new parent
   sortFunction?: TreeNodeSort;
-  
+ 
   // Disable drag and drop
   readOnly?: boolean;
-  
+ 
   // Schema is optional but without one all nodes will accept all other nodes as children
   schema?: Schema;
 }
+```

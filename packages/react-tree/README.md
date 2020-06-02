@@ -8,7 +8,7 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 
 ### Demoes
 
-- Simple demo
+- [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/App.tsx)
 - Lazy children demo
 - [Journal example](https://github.com/mpkelly/Journal/blob/master/packages/journal/src/features/collections-tree/CollectionsTree.tsx)
 
