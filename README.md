@@ -1,6 +1,6 @@
 # react-tree
 
-A React Tree that supports drag and drop. I wrote this out of frustration after trying several other trees. In total I must have used 5-6 trees for React but none of them felt quite right: some were too buggy and others had whacky data models or didn't allow me to do X. Hopefully you will find `react-tree` to be easy to use while doing all of the heavy lifting for you and allowing you to retain full control over the appearance. 
+A React Tree that supports drag and drop. I wrote this out of frustration after trying several other trees. In total I must have used 5-6 trees for React but none of them felt quite right: some were too buggy and others had whacky data models or didn't allow me to do X.
 
 ### Install
 
@@ -15,6 +15,7 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 ### Features
 
 * [x] Tiny bundle size - zero dependencies other than React
+* [x] TypeScript & JavaScript support
 * [x] Basic drag & drop support
 * [x] Simple list data model
 * [x] Support for toggling expand/collapse
@@ -28,7 +29,7 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 
 I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last few features but they will be added once I have relaunched Journal this month. 
 
-### Basic concepts
+### API
 
 #### Nodes
 
@@ -64,11 +65,13 @@ enum Type {
 }
 
 const FileSystemSchema: Schema = {
-  //a folder accepts folders and other files
-  [Type.Folder]: [Type.Folder, Type.File],
-  
-  //empty array = accepts nothing
-  [Type.File]: [],
+  rules: {
+      //a folder accepts folders and other files
+      [Type.Folder]: [Type.Folder, Type.File],
+
+      //empty array = accepts nothing
+      [Type.File]: [],
+  }
 };
 
 ```
@@ -95,7 +98,7 @@ const flatNodes: FlatNode[] = [
 
 (a folder with one child of type file)
 
-If you need to do more advanced validation that can't be easily described by simple type mapping then you can add a `isDropAllowed(dragNode, dropNode)` to your Schema object. This function is called after the internal sanity checks and declarative checks are passed. 
+If you need to do more advanced validation that can't be easily described by simple type mapping then you can add a `isDropAllowed(dragNode, dropNode)` to your Schema object. This function is called after the internal sanity checks and rule checks are passed. 
 
 #### Expand / collapse
 
