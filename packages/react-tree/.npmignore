@@ -6,3 +6,4 @@ test
 src
 jest.config.js
 webpack*
+tsconfig.json
