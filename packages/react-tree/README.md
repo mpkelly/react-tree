@@ -33,7 +33,7 @@ I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-pro
 
 #### Nodes
 
-To make use of the tree you just need to provide an array of `FlatNodes.
+To make use of the tree you just need to provide an array of `FlatNodes`.
 
 ```TypeScript
 
@@ -131,6 +131,23 @@ React Tree doesn't provide styling because it doesn't render anything by itself 
       background-color: rgba(0, 0, 0, .1);
     }
 
+    // Applied to the <TreeElement/> wrapper which wraps the UI you render for each Node with `renderElement`
+    // This wrapper will include children to if present
+    [data-rt-element-wrapper] {
+
+    }
+
+    // Output on the above wrappper allowing you target specific types
+    [data-rt-type="type"] {
+
+    }
+
+    // Also output on the wrapper with the node's depth in the tree
+    [data-rt-depth="0"] {
+
+    }
+
+
     // set on the <CollapseToggle/> wrapper with value true or false according to `Node.expanded`
     [data-rt-collapsed="false"] {
       transform: rotate(90deg);
@@ -139,13 +156,6 @@ React Tree doesn't provide styling because it doesn't render anything by itself 
     // always set on the <CollapseToggle/> wrapper element
     [data-rt-collapse-toggle] {
       transition: transform .3s;
-    }
-
-    // Applied to the <TreeElement/> wrapper which wraps the UI you render for each Node with `renderElement`
-    [data-tree-element] {
-      display: flex;
-      align-items: center;
-      height: 40px;
     }
 
 ```
