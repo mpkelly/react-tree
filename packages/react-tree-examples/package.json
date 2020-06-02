@@ -1,6 +1,6 @@
 {
   "name": "react-tree-examples",
-  "version": "0.0.2",
+  "version": "0.0.2-alpha",
   "private": true,
   "description": "Examples for @mpkelly/react-tree-kit",
   "keywords": [
@@ -36,7 +36,7 @@
     "webpack-glob": "^2.0.2"
   },
   "dependencies": {
-    "@mpkelly/react-tree": "^0.0.2",
+    "@mpkelly/react-tree": "^0.0.2-alpha",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
