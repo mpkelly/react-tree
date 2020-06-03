@@ -40,7 +40,7 @@ export const useTreeElementState = (props: TreeElementProps) => {
   const onDrop: DragHandler = useCallback(
     (event) => {
       event.preventDefault();
-      if (overId && overId == node.id) {
+      if (overId !== undefined && overId == node.id) {
         const id = event.dataTransfer.getData("text/rt-id");
         handleDrop(id, node.id);
       }

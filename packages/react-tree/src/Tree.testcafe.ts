@@ -17,6 +17,11 @@ test("Drop a file into a folder", async (t) => {
 
   await t.expect(Selector(Folder1Items).count).eql(4);
   await t.expect(Selector(Folder2Items).count).eql(2);
+
+  await t.dragToElement(File1, Selector(Folder1Items).find(":first-child"));
+
+  await t.expect(Selector(Folder1Items).count).eql(4);
+  await t.expect(Selector(Folder2Items).count).eql(1);
 });
 
 test("Collapse and expand", async (t) => {
