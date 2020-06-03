@@ -50,9 +50,9 @@
     "webpack-glob": "^2.0.2"
   },
   "scripts": {
-    "test-jest": "jest",
-    "test-testcafe": "webpack  --config ./webpack.test.config.js --mode=production && testcafe chrome ./src/Tree.testcafe.ts",
-    "test": "npm run test-jest && npm run test-testcafe",
+    "jest": "jest",
+    "testcafe": "webpack  --config ./webpack.test.config.js --mode=production && testcafe chrome ./src/Tree.testcafe.ts",
+    "test": "npm run jest && npm run testcafe",
     "watch": "webpack -w --mode=development",
     "typings": "tsc -d --emitDeclarationOnly --allowJs false --esModuleInterop true --skipLibCheck true --jsx react --outDir ./dist src/Index.ts",
     "dist": "webpack --mode=production && npm run typings",
