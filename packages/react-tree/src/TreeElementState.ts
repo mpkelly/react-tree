@@ -19,7 +19,8 @@ export const useTreeElementState = (props: TreeElementProps) => {
   }
 
   let onDragStart: DragHandler | undefined = undefined;
-  if (!dragDisabled) {
+
+  if (!dragDisabled && !node.dragDisabled) {
     onDragStart = (event) => {
       event.dataTransfer.setData("text/rt-id", String(node.id));
       event.dataTransfer.dropEffect = "move";

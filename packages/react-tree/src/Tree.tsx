@@ -109,6 +109,7 @@ export const Tree = (props: TreeProps) => {
       }
     }
     setOverId(undefined);
+    setDragId(undefined);
   };
 
   const handleToggleCollapse = (node: TreeNode) => {
@@ -127,7 +128,10 @@ export const Tree = (props: TreeProps) => {
       }
       const dragNode = nodes.find((node) => node.id === dragId);
       if (dragNode) {
-        // Don't allow dropping into s existing parent
+        if (dragNode.dragDisabled) {
+          return;
+        }
+        // Don't allow dropping into existing parent
         if (dragNode.parentId === overId) {
           return;
         }
@@ -151,30 +155,33 @@ export const Tree = (props: TreeProps) => {
     [dragId]
   );
 
-  const renderTree = (nodes: TreeNode[], depth = 0) => {
-    const result: ReactNode[] = [];
-    nodes.forEach((node) => {
-      const nodeItem = renderElement(node, depth);
-      let children: ReactNode[] = [];
-      if (node.expanded === undefined || node.expanded) {
-        children = renderTree(node.children, depth + 1);
-      }
-      let props: any = {};
-      if (node.id === overId && overId !== node.parentId) {
-        props["data-rt-drop-valid"] = true;
-      }
+  const renderTree = useCallback(
+    (nodes: TreeNode[], depth = 0) => {
+      const result: ReactNode[] = [];
+      nodes.forEach((node) => {
+        const nodeItem = renderElement(node, depth);
+        let children: ReactNode[] = [];
+        if (node.expanded === undefined || node.expanded) {
+          children = renderTree(node.children, depth + 1);
+        }
+        let props: any = {};
+        if (node.id === overId && overId !== node.parentId) {
+          props["data-rt-drop-valid"] = true;
+        }
 
-      result.push(
-        <div data-rt-element-wrapper={node.id} {...props}>
-          <TreeElement node={node} depth={depth}>
-            {nodeItem}
-          </TreeElement>
-          {children}
-        </div>
-      );
-    });
-    return result;
-  };
+        result.push(
+          <div data-rt-element-wrapper={node.id} {...props}>
+            <TreeElement node={node} depth={depth}>
+              {nodeItem}
+            </TreeElement>
+            {children}
+          </div>
+        );
+      });
+      return result;
+    },
+    [overId]
+  );
 
   const tree = renderTree(treeNodes);
 

@@ -29,6 +29,7 @@ const flatNodes: FlatNode[] = [
     id: 0,
     expanded: true,
     type: Type.Folder,
+    dragDisabled: true,
     //FlatNode supports any additional properties you need
     name: "Folder one",
   },
@@ -43,6 +44,7 @@ const flatNodes: FlatNode[] = [
     type: Type.File,
     parentId: 0,
     name: "File two",
+    dragDisabled: true,
   },
   {
     id: 3,

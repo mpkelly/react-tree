@@ -10,11 +10,12 @@ export interface TreeElementProps {
 }
 
 export const TreeElement = (props: TreeElementProps) => {
-  const { node, children } = props;
+  const { node, children, dragDisabled } = props;
   const { id } = node;
   const elementProps = useTreeElementState(props);
+  const draggable = !(node.dragDisabled || dragDisabled);
   return (
-    <div key={id} draggable {...elementProps}>
+    <div key={id} draggable={draggable} {...elementProps}>
       {children}
     </div>
   );

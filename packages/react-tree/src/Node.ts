@@ -26,6 +26,11 @@ export interface Node {
    */
   expanded?: boolean;
 
+  /**
+   * Can this node be dragged? Defaults to false.
+   */
+  dragDisabled?: boolean;
+
   [key: string]: any;
 }
 
