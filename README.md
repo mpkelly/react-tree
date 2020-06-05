@@ -10,7 +10,7 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 
 - [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/App.tsx)
 - Lazy children demo
-- [Journal example](https://github.com/mpkelly/Journal/blob/master/packages/journal/src/features/collections-tree/CollectionsTree.tsx)
+- [Journal example](https://github.com/mpkelly/Journal/blob/ab927cb481f60459d50a58012b89795aa33bfa47/packages/journal/src/features/collections-tree/CollectionsTree.tsx#L39)
 
 ### Features
 
