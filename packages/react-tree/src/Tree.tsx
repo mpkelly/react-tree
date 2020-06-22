@@ -8,16 +8,21 @@ import React, {
 import {
   TreeNode,
   FlatNode,
-  toTreeNodes,
   NodeId,
   Node,
-  findTreeNodeById,
-  toFlatNodes,
   TreeNodeSort,
   sortTree,
 } from "./Node";
 import { TreeElement } from "./TreeElement";
 import { Schema, isDropAllowed } from "./Schema";
+import { useSelectionState, SelectionState } from "./SelectionState";
+import {
+  findTreeNodeById,
+  getSelectedNodeIds,
+  toFlatNodes,
+  toTreeNodes,
+} from "./NodeUtils";
+import { useKeyboard } from "./Keyboard";
 
 export interface TreeProps {
   /**
@@ -34,7 +39,25 @@ export interface TreeProps {
    * @param property The property that changed
    * @param value The new value
    */
-  onChange?(node: FlatNode, property: keyof FlatNode, value: any): void;
+  onChange?(nodes: FlatNode[], property: keyof FlatNode, value: any): void;
+
+  /**
+   * Library users need to implement this unless `disableCopy` is set to true.
+   * The pasted nodes should be added to the `nodes` prop value
+   * so they are reflected in the tree. Note: this is called after copy only. Cut
+   * and pasted nodes are handled using `onChange`.
+   *
+   * @param nodes the nodes that were copied.
+   * @param newParentId the `id` if the node they were copied to.
+   */
+  onPaste?(nodes: FlatNode[], newParentId: NodeId): void;
+
+  /**
+   * Listen for selection events.
+   *
+   * @param selected the nodes that are selected
+   */
+  onSelectionChange?(selected: Node[]): void;
 
   /**
    * Render a single node however you like. The output of this call will be wrapped
@@ -49,36 +72,69 @@ export interface TreeProps {
   renderElement(node: TreeNode, depth: number): JSX.Element;
 
   /**
+   * Set constraints. See `Schema`.
+   */
+  schema?: Schema;
+
+  /**
    * Pass a sort function to make the Tree sorted. You can use the exported
-   * function `createAlphaNumericSort` for most cases.
+   * function `createAlphaNumericSort` for most cases. The default behaviour is to append
+   * dropped nodes to the parent node's `children` array.
    */
   sortFunction?: TreeNodeSort;
 
   /**
-   * Disable drag and drop
+   * Disable drag and drop. Default false.
    */
-  readOnly?: boolean;
+  disableDrag?: boolean;
 
   /**
-   * Set constraints. See `Schema`.
+   *  Disable all selection. Default false.
    */
-  schema?: Schema;
+  disableSelection?: boolean;
+
+  /**
+   *  Disable multiple selection. Default false.
+   */
+  disableMultiSelection?: boolean;
+
+  /**
+   *  Disable support for cutting and pasting nodes. Default false.
+   */
+  disableCut?: boolean;
+
+  /**
+   *  Disable support for copying (adding) and pasting nodes. Default false.
+   */
+  disableCopy?: boolean;
+
+  /**
+   * Override the browser's default drag image.
+   *
+   * @param nodes the ids of the Nodes that are being dragged
+   */
+  renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
 }
 
 export interface TreeContextValue {
   overId?: NodeId;
+  dragId?: NodeId;
   handleDrag(id?: NodeId): void;
   handleOver(id?: NodeId): void;
   handleDrop(dropped: NodeId, target?: NodeId): void;
   handleToggleCollapse(node: Node): void;
-  readOnly: boolean;
+  disableDrag: boolean;
+  selection: SelectionState;
+  setSelection(selection: SelectionState): void;
+  handleClick(event: React.MouseEvent, node: NodeId): void;
+  renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
 }
 
 export const TreeContext = createContext<TreeContextValue | undefined>(
   undefined
 );
 
-export const useTreeContext = () => {
+export const useTree = () => {
   return useContext(TreeContext);
 };
 
@@ -90,30 +146,76 @@ export const Tree = (props: TreeProps) => {
     nodes,
     renderElement,
     onChange,
+    onPaste,
     sortFunction,
-    readOnly,
+    disableDrag,
     schema,
+    disableSelection,
+    disableMultiSelection,
+    disableCut,
+    disableCopy,
+    renderDragImage,
   } = props;
+  const treeNodes = toTreeNodes(nodes);
   const [dragId, setDragId] = useState<NodeId>();
   const [overId, setOverId] = useState<NodeId>();
-  const treeNodes = toTreeNodes(nodes);
+
   if (sortFunction) {
     sortTree(treeNodes, sortFunction);
   }
 
-  const handleDrop = (dropped: NodeId, target?: NodeId) => {
-    if (target !== undefined) {
-      const node = nodes.find((node) => String(node.id) === String(dropped));
-      if (node && String(node.parentId) !== String(target)) {
-        onChange && onChange(node, "parentId", target);
-      }
+  const { selection, handleClick, setSelection } = useSelectionState(
+    treeNodes,
+    disableSelection,
+    disableMultiSelection
+  );
+
+  const handlePasteNodes = useCallback(() => {
+    if (selection.cut.length) {
+      const changed = nodes.filter((node) => selection.cut.includes(node.id));
+      onChange && onChange(changed, "parentId", selection.selected[0]);
+    } else {
+      const changed = nodes.filter((node) =>
+        selection.copied.includes(node.id)
+      );
+      onPaste && onPaste(changed, selection.selected[0]);
     }
-    setOverId(undefined);
-    setDragId(undefined);
-  };
+  }, [selection]);
+
+  useKeyboard(
+    treeNodes,
+    selection,
+    setSelection,
+    handlePasteNodes,
+    !!disableCut,
+    !!disableCopy
+  );
+
+  const handleDrop = useCallback(
+    (dropped: NodeId, target?: NodeId) => {
+      if (target !== undefined) {
+        const node = nodes.find((node) => String(node.id) === String(dropped));
+        if (node && String(node.parentId) !== String(target)) {
+          if (onChange) {
+            const changedIds = getSelectedNodeIds(treeNodes, [
+              ...selection.selected,
+              dragId as NodeId,
+            ]);
+            const changed = changedIds.map((id) =>
+              nodes.find((node) => node.id === id)
+            ) as FlatNode[];
+            onChange(changed, "parentId", target);
+          }
+        }
+      }
+      setOverId(undefined);
+      setDragId(undefined);
+    },
+    [dragId]
+  );
 
   const handleToggleCollapse = (node: TreeNode) => {
-    onChange && onChange(node, "expanded", !node.expanded);
+    onChange && onChange([node], "expanded", !node.expanded);
   };
 
   const handleOver = useCallback(
@@ -122,37 +224,47 @@ export const Tree = (props: TreeProps) => {
         setOverId(undefined);
         return;
       }
-      // Don't allow drop on self
-      if (dragId === overId) {
-        return;
-      }
-      const dragNode = nodes.find((node) => node.id === dragId);
-      if (dragNode) {
-        if (dragNode.dragDisabled) {
+
+      const all = [...selection.selected, dragId];
+
+      for (let dragId of all) {
+        // Don't allow drop on self
+        if (dragId === overId) {
           return;
         }
-        // Don't allow dropping into existing parent
-        if (dragNode.parentId === overId) {
-          return;
-        }
-        const overNode = nodes.find((node) => node.id === overId);
-        if (overNode) {
-          const search = findTreeNodeById(dragId as NodeId, treeNodes);
-          if (search && search.node) {
-            const children = toFlatNodes(search.node.children);
-            // Don't allow dropping into a child node
-            if (children.find((child) => child.id == overId)) {
+        const dragNode = nodes.find((node) => node.id === dragId);
+        if (dragNode) {
+          if (dragNode.dragDisabled) {
+            setOverId(undefined);
+            return;
+          }
+          // Don't allow dropping into existing parent
+          if (dragNode.parentId === overId) {
+            setOverId(undefined);
+            return;
+          }
+          const overNode = nodes.find((node) => node.id === overId);
+          if (overNode) {
+            const search = findTreeNodeById(dragId as NodeId, treeNodes);
+            if (search && search.node) {
+              const children = toFlatNodes(search.node.children);
+              // Don't allow dropping into a child node
+              if (children.find((child) => child.id == overId)) {
+                setOverId(undefined);
+                return;
+              }
+            }
+            // Validate against schema, if set
+            if (!isDropAllowed(dragNode, overNode, schema)) {
+              setOverId(undefined);
               return;
             }
           }
-          // Validate against schema, if set
-          if (isDropAllowed(dragNode, overNode, schema)) {
-            setOverId(overId);
-          }
         }
       }
+      setOverId(overId);
     },
-    [dragId]
+    [selection, dragId]
   );
 
   const renderTree = useCallback(
@@ -165,6 +277,7 @@ export const Tree = (props: TreeProps) => {
           children = renderTree(node.children, depth + 1);
         }
         let props: any = {};
+
         if (node.id === overId && overId !== node.parentId) {
           props["data-rt-drop-valid"] = true;
         }
@@ -191,7 +304,12 @@ export const Tree = (props: TreeProps) => {
     handleOver,
     handleDrop,
     handleToggleCollapse,
-    readOnly: Boolean(readOnly),
+    disableDrag: !!disableDrag,
+    selection,
+    setSelection,
+    handleClick,
+    renderDragImage,
+    dragId,
   };
 
   return (

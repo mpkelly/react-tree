@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { TreeNode } from "./Node";
-import { useTreeContext, TreeContextValue } from "./Tree";
+import { useTree, TreeContextValue } from "./Tree";
 
 export interface CollapseToggleProps {
   children: ReactNode;
@@ -15,7 +15,7 @@ export interface CollapseToggleProps {
 export const CollapseToggle = (props: CollapseToggleProps) => {
   const { children, node } = props;
   const collapsed = !node.expanded;
-  const { handleToggleCollapse } = useTreeContext() as TreeContextValue;
+  const { handleToggleCollapse } = useTree() as TreeContextValue;
   if (!handleToggleCollapse) {
     throw Error(
       "It looks like you're trying to use CollapseToggle outside of the <Tree/> scope"

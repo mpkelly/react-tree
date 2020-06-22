@@ -1,11 +1,11 @@
 import {
   Node,
   TreeNode,
-  toFlatNodes,
   FlatNode,
-  toTreeNodes,
-  findTreeNodeById,
+
+
 } from "./Node";
+import {findTreeNodeById, toFlatNodes, toTreeNodes} from "./NodeUtils";
 
 const tree: TreeNode[] = [
   {

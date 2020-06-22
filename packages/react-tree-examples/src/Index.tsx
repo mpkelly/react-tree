@@ -7,6 +7,7 @@ import {
   Tree,
   CollapseToggle,
   Schema,
+  NodeId,
 } from "@mpkelly/react-tree";
 
 // THE DATA
@@ -24,9 +25,11 @@ const FileSystemSchema: Schema = {
   },
 };
 
+let id = 0;
+
 const flatNodes: FlatNode[] = [
   {
-    id: 0,
+    id: id++,
     expanded: true,
     type: Type.Folder,
     dragDisabled: true,
@@ -34,24 +37,42 @@ const flatNodes: FlatNode[] = [
     name: "Folder one",
   },
   {
-    id: 1,
+    id: id++,
     type: Type.File,
     parentId: 0,
     name: "File one",
   },
   {
-    id: 2,
+    id: id++,
     type: Type.File,
     parentId: 0,
     name: "File two",
-    dragDisabled: true,
   },
   {
-    id: 3,
+    id: id++,
+    type: Type.File,
+    parentId: 0,
+    name: "File three",
+  },
+  {
+    id: id++,
+    type: Type.File,
+    parentId: 0,
+    name: "File five",
+  },
+  {
+    id: id++,
     expanded: true,
     parentId: 0,
     type: Type.Folder,
     name: "Folder two",
+  },
+  {
+    id: id++,
+    expanded: true,
+    parentId: 0,
+    type: Type.Folder,
+    name: "Folder three",
   },
 ];
 
@@ -136,17 +157,28 @@ const App = () => {
 
   //Only two things can change: 'parentId' and 'expanded'
   const handleChange = (
-    changed: FlatNode,
+    changed: FlatNode[],
     property: keyof FlatNode,
     value: any
   ) => {
     setNodes((nodes) => {
       const next = nodes.slice();
-      (next.find((node) => node.id == changed.id) as FlatNode)[
-        property
-      ] = value;
+      changed.forEach(
+        (changed) =>
+          ((next.find((node) => node.id == changed.id) as FlatNode)[
+            property
+          ] = value)
+      );
       return next;
     });
+    const image = document.getElementById("tree-dragcount");
+    if (image && image.parentElement) {
+      image.parentElement.removeChild(image);
+    }
+  };
+  const handlePaste = (nodes: FlatNode[], parentId: NodeId) => {
+    const newNodes = nodes.map((node) => ({ ...node, parentId, id: id++ }));
+    setNodes((nodes) => nodes.concat(newNodes));
   };
 
   const renderElement = (node: TreeNode, depth: number) => {
@@ -166,6 +198,7 @@ const App = () => {
       renderElement={renderElement}
       sortFunction={createAlphaNumericSort("name")}
       onChange={handleChange}
+      onPaste={handlePaste}
     />
   );
 };

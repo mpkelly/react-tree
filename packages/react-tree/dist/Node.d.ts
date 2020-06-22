@@ -25,6 +25,9 @@ export interface Node {
      * Can this node be dragged? Defaults to false.
      */
     dragDisabled?: boolean;
+    /**
+     * Nodes can include any additional properties as necessary.
+     */
     [key: string]: any;
 }
 /**
@@ -52,30 +55,10 @@ export declare type TreeNodeSort = (a: TreeNode, b: TreeNode) => number;
  * This property is typically called `name` or `title` etc.
  */
 export declare const createAlphaNumericSort: (property: keyof TreeNode) => TreeNodeSort;
+/**
+ * Sort the tree according to the `sortFunction` provided.
+ *
+ * @param tree the tree as an array of `TreeNodes`.
+ * @param sortFunction the sorting function to use.
+ */
 export declare const sortTree: (tree: TreeNode[], sortFunction: TreeNodeSort) => void;
-export declare const toFlatNode: (node: TreeNode, parentId?: NodeId) => FlatNode;
-/**
- *
- * @param nodes The `TreeNodes` to flatten into `FlatNodes`.
- * @param parentId The parentId of the subtree or undefined if the `nodes`
- * array contains root elements.
- */
-export declare const toFlatNodes: (nodes: TreeNode[], parentId?: NodeId) => FlatNode[];
-export declare const toTreeNode: (node: FlatNode) => TreeNode;
-/**
- * Convert an array of `FlatNode`s into a tree.
- *
- * @param nodes the `FlatNode`s to convert into a tree.
- */
-export declare const toTreeNodes: (nodes: FlatNode[]) => TreeNode[];
-/**
- * Find a `TreeNode` somewhere on a tree. The parent is also returned
- * if it is exists i.e. non-root nodes.
- *
- * @param id the ID to search for
- * @param nodes the nodes to search
- */
-export declare const findTreeNodeById: (id: NodeId, nodes: TreeNode[], parent?: TreeNode | null) => {
-    node?: TreeNode;
-    parent?: TreeNode | null;
-};

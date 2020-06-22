@@ -31,6 +31,9 @@ export interface Node {
    */
   dragDisabled?: boolean;
 
+  /**
+   * Nodes can include any additional properties as necessary.
+   */
   [key: string]: any;
 }
 
@@ -69,6 +72,12 @@ export const createAlphaNumericSort = (
   };
 };
 
+/**
+ * Sort the tree according to the `sortFunction` provided.
+ *
+ * @param tree the tree as an array of `TreeNodes`.
+ * @param sortFunction the sorting function to use.
+ */
 export const sortTree = (tree: TreeNode[], sortFunction: TreeNodeSort) => {
   tree.sort(sortFunction);
   tree.forEach((node) => {
@@ -76,73 +85,3 @@ export const sortTree = (tree: TreeNode[], sortFunction: TreeNodeSort) => {
   });
 };
 
-export const toFlatNode = (node: TreeNode, parentId?: NodeId): FlatNode => {
-  const { children, ...rest } = node;
-  return { ...rest, parentId };
-};
-
-/**
- *
- * @param nodes The `TreeNodes` to flatten into `FlatNodes`.
- * @param parentId The parentId of the subtree or undefined if the `nodes`
- * array contains root elements.
- */
-export const toFlatNodes = (
-  nodes: TreeNode[],
-  parentId?: NodeId
-): FlatNode[] => {
-  let items: FlatNode[] = [];
-  nodes.forEach((node) => {
-    items.push(toFlatNode(node, parentId));
-    items = items.concat(toFlatNodes(node.children, node.id));
-  });
-  return items;
-};
-
-export const toTreeNode = (node: FlatNode): TreeNode => {
-  return { ...node, children: [] };
-};
-
-/**
- * Convert an array of `FlatNode`s into a tree.
- *
- * @param nodes the `FlatNode`s to convert into a tree.
- */
-export const toTreeNodes = (nodes: FlatNode[]): TreeNode[] => {
-  const table = Object.create(null);
-  nodes.forEach((node) => (table[node.id] = toTreeNode(node)));
-  const tree: TreeNode[] = [];
-  nodes.forEach((node) => {
-    if (node.parentId !== undefined) {
-      table[node.parentId].children.push(table[node.id]);
-    } else {
-      tree.push(table[node.id]);
-    }
-  });
-  return tree;
-};
-
-/**
- * Find a `TreeNode` somewhere on a tree. The parent is also returned
- * if it is exists i.e. non-root nodes.
- *
- * @param id the ID to search for
- * @param nodes the nodes to search
- */
-export const findTreeNodeById = (
-  id: NodeId,
-  nodes: TreeNode[],
-  parent: TreeNode | null = null
-): { node?: TreeNode; parent?: TreeNode | null } | null => {
-  for (let node of nodes) {
-    if (node.id === id) {
-      return { node, parent };
-    } else {
-      const result = findTreeNodeById(id, node.children, node);
-      if (result) {
-        return result;
-      }
-    }
-  }
-  return null;
-};
