@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { TreeNode } from "./Node";
+import { Node, TreeNode } from "./Node";
 import { toList } from "./NodeUtils";
 import { SelectionState } from "./SelectionState";
 
@@ -8,6 +8,7 @@ export const useKeyboard = (
   selection: SelectionState,
   setSelection: React.Dispatch<React.SetStateAction<SelectionState>>,
   handlePasteNodes: Function,
+  handleToggleCollapse: (node: Node) => void,
   disableCut: boolean,
   disableCopy: boolean
 ) => {
@@ -87,7 +88,21 @@ export const useKeyboard = (
     }));
   };
 
+  const handleSpace = () => {
+    if (selection.selected.length) {
+      const selected = list.find((node) => node.id === selection.selected[0]);
+      if (selected) {
+        handleToggleCollapse(selected);
+      }
+    }
+  };
+
   const handleKey = (event: KeyboardEvent) => {
+    if (document.activeElement !== document.body) {
+      // Ignore key events if other nodes are focused. Might need
+      // make this an API option.
+      return;
+    }
     switch (event.key) {
       case "ArrowDown":
         return handleChange(event, 1);
@@ -101,6 +116,8 @@ export const useKeyboard = (
         return handlePaste(event);
       case "Escape":
         return handleEscape();
+      case " ":
+        return handleSpace();
     }
   };
 
@@ -109,5 +126,5 @@ export const useKeyboard = (
     return () => {
       window.removeEventListener("keydown", handleKey);
     };
-  }, [selection]);
+  }, [selection, list]);
 };

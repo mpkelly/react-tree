@@ -1,4 +1,4 @@
-import React, { ReactNode, SVGProps, useState } from "react";
+import React, { ReactNode, SVGProps, useState, useCallback } from "react";
 import { render } from "react-dom";
 import {
   TreeNode,
@@ -156,26 +156,19 @@ const App = () => {
   const [nodes, setNodes] = useState(flatNodes);
 
   //Only two things can change: 'parentId' and 'expanded'
-  const handleChange = (
-    changed: FlatNode[],
-    property: keyof FlatNode,
-    value: any
-  ) => {
-    setNodes((nodes) => {
+  const handleChange = useCallback(
+    (changed: FlatNode[], property: keyof FlatNode, value: any) => {
       const next = nodes.slice();
-      changed.forEach(
-        (changed) =>
-          ((next.find((node) => node.id == changed.id) as FlatNode)[
-            property
-          ] = value)
-      );
-      return next;
-    });
-    const image = document.getElementById("tree-dragcount");
-    if (image && image.parentElement) {
-      image.parentElement.removeChild(image);
-    }
-  };
+      changed.forEach((changed) => {
+        const node = next.find((node) => node.id == changed.id) as FlatNode;
+        const nextNode = { ...node, [property]: value };
+        next.splice(next.indexOf(node), 1, nextNode);
+      });
+      setNodes(next);
+    },
+    [nodes]
+  );
+
   const handlePaste = (nodes: FlatNode[], parentId: NodeId) => {
     const newNodes = nodes.map((node) => ({ ...node, parentId, id: id++ }));
     setNodes((nodes) => nodes.concat(newNodes));

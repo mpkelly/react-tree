@@ -14,15 +14,11 @@ import {
   sortTree,
 } from "./Node";
 import { TreeElement } from "./TreeElement";
-import { Schema, isDropAllowed } from "./Schema";
+import { Schema } from "./Schema";
 import { useSelectionState, SelectionState } from "./SelectionState";
-import {
-  findTreeNodeById,
-  getSelectedNodeIds,
-  toFlatNodes,
-  toTreeNodes,
-} from "./NodeUtils";
+import { getSelectedNodeIds, toTreeNodes } from "./NodeUtils";
 import { useKeyboard } from "./Keyboard";
+import { isMoveValid } from "./TreeUtils";
 
 export interface TreeProps {
   /**
@@ -170,23 +166,52 @@ export const Tree = (props: TreeProps) => {
     disableMultiSelection
   );
 
+  const selected = [...selection.selected, dragId as NodeId];
+
   const handlePasteNodes = useCallback(() => {
+    const target = selection.selected[0];
+    if (target === undefined) {
+      return;
+    }
     if (selection.cut.length) {
       const changed = nodes.filter((node) => selection.cut.includes(node.id));
-      onChange && onChange(changed, "parentId", selection.selected[0]);
+      if (
+        isMoveValid(
+          nodes,
+          changed.map((node) => node.id),
+          target,
+          schema
+        )
+      ) {
+        onChange && onChange(changed, "parentId", target);
+      }
     } else {
       const changed = nodes.filter((node) =>
         selection.copied.includes(node.id)
       );
-      onPaste && onPaste(changed, selection.selected[0]);
+      if (
+        isMoveValid(
+          nodes,
+          changed.map((node) => node.id),
+          target,
+          schema
+        )
+      ) {
+        onPaste && onPaste(changed, target);
+      }
     }
   }, [selection]);
+
+  const handleToggleCollapse = (node: Node) => {
+    onChange && onChange([node], "expanded", !node.expanded);
+  };
 
   useKeyboard(
     treeNodes,
     selection,
     setSelection,
     handlePasteNodes,
+    handleToggleCollapse,
     !!disableCut,
     !!disableCopy
   );
@@ -214,55 +239,13 @@ export const Tree = (props: TreeProps) => {
     [dragId]
   );
 
-  const handleToggleCollapse = (node: TreeNode) => {
-    onChange && onChange([node], "expanded", !node.expanded);
-  };
-
   const handleOver = useCallback(
     (overId?: NodeId) => {
-      if (overId === undefined) {
+      if (isMoveValid(nodes, selected, overId, schema)) {
+        setOverId(overId);
+      } else {
         setOverId(undefined);
-        return;
       }
-
-      const all = [...selection.selected, dragId];
-
-      for (let dragId of all) {
-        // Don't allow drop on self
-        if (dragId === overId) {
-          return;
-        }
-        const dragNode = nodes.find((node) => node.id === dragId);
-        if (dragNode) {
-          if (dragNode.dragDisabled) {
-            setOverId(undefined);
-            return;
-          }
-          // Don't allow dropping into existing parent
-          if (dragNode.parentId === overId) {
-            setOverId(undefined);
-            return;
-          }
-          const overNode = nodes.find((node) => node.id === overId);
-          if (overNode) {
-            const search = findTreeNodeById(dragId as NodeId, treeNodes);
-            if (search && search.node) {
-              const children = toFlatNodes(search.node.children);
-              // Don't allow dropping into a child node
-              if (children.find((child) => child.id == overId)) {
-                setOverId(undefined);
-                return;
-              }
-            }
-            // Validate against schema, if set
-            if (!isDropAllowed(dragNode, overNode, schema)) {
-              setOverId(undefined);
-              return;
-            }
-          }
-        }
-      }
-      setOverId(overId);
     },
     [selection, dragId]
   );

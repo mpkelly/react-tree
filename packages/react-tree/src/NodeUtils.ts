@@ -1,4 +1,4 @@
-import {FlatNode, NodeId, TreeNode} from "./Node";
+import { FlatNode, NodeId, TreeNode } from "./Node";
 
 /**
  * Convert a `TreeNode` into a `FlatNode`.
@@ -7,8 +7,8 @@ import {FlatNode, NodeId, TreeNode} from "./Node";
  * @param parentId the `id` of the parent `TreeNode` unless the node is a root node.
  */
 export const toFlatNode = (node: TreeNode, parentId?: NodeId): FlatNode => {
-  const {children, ...rest} = node;
-  return {...rest, parentId};
+  const { children, ...rest } = node;
+  return { ...rest, parentId };
 };
 
 /**
@@ -35,7 +35,7 @@ export const toFlatNodes = (
  * @param node the `FlatNode` to convert.
  */
 export const toTreeNode = (node: FlatNode): TreeNode => {
-  return {...node, children: []};
+  return { ...node, children: [] };
 };
 
 /**
@@ -57,7 +57,6 @@ export const toTreeNodes = (nodes: FlatNode[]): TreeNode[] => {
   return tree;
 };
 
-
 /**
  * Find a `TreeNode` somewhere on a tree. The parent is also returned
  * if it is exists i.e. non-root nodes.
@@ -72,7 +71,7 @@ export const findTreeNodeById = (
 ): { node?: TreeNode; parent?: TreeNode | null } | null => {
   for (let node of nodes) {
     if (node.id === id) {
-      return {node, parent};
+      return { node, parent };
     } else {
       const result = findTreeNodeById(id, node.children, node);
       if (result) {
@@ -102,9 +101,10 @@ export const toList = (tree: TreeNode[], result: FlatNode[] = []) => {
 
 /**
  * Get a sub-list from a tree that has been converted into a list. The sub-list
- * start index is based on the lowest index of the nodes which mapped to the `ids`
- * param. The end index is the highest index of the node which maps to the `ids`
- * param. Both indices are inclusive.
+ * start index is based on the lowest index of the nodes which are mapped from
+ * the `ids` param. The end index is the highest index of the node which
+ * maps from the `ids` param. All intermediate nodes even if their id is not in
+ * the `ids` paramsare returned and both indices are inclusive.
  *
  *  See also `toList`.
  *
