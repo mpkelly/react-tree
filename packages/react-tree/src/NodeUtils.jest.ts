@@ -71,13 +71,6 @@ describe("NodeUtils", function () {
     let result = findTreeNodeById(4, tree);
     expect(result?.node?.id).toEqual(4);
     expect(result?.parent?.id).toEqual(1);
-
-    result = findTreeNodeById(10, tree);
-    expect(result).toEqual(null);
-
-    result = findTreeNodeById(1, tree);
-    expect(result?.node?.id).toEqual(1);
-    expect(result?.parent).toEqual(null);
   });
 
   test("findTreeNodeById - nested file", async () => {
