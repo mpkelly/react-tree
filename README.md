@@ -257,11 +257,12 @@ export interface TreeProps {
   onPaste?(nodes: FlatNode[], newParentId: NodeId): void;
 
   /**
-   * Listen for selection events.
+   * Listen for selection events. The tree maintains its own selection
+   * state internally so there is not corresponding prop for `selection`.
    *
-   * @param selected the nodes that are selected
+   * @param the selected, cut and copied nodes.
    */
-  onSelectionChange?(selected: Node[]): void;
+  onSelectionChange?(selected: SelectionState): void;
 
   /**
    * Render a single node however you like. The output of this call will be wrapped
