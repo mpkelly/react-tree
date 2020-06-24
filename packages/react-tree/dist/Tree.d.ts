@@ -9,8 +9,8 @@ export interface TreeProps {
      */
     nodes: FlatNode[];
     /**
-     * Library users need to implement this and update the node with the value
-     * and also update their own state with the new node for changes to be reflected
+     * Library users need to implement this and update the nodes with the new value
+     * and also update their own state with the new nodes so the changes are reflected
      * in the <Tree/>.
      *
      * @param node The node that changed.
@@ -93,7 +93,7 @@ export interface TreeContextValue {
     handleToggleCollapse(node: Node): void;
     disableDrag: boolean;
     selection: SelectionState;
-    setSelection(selection: SelectionState): void;
+    handleSelectionChange(selection: SelectionState): void;
     handleClick(event: React.MouseEvent, node: NodeId): void;
     renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
 }

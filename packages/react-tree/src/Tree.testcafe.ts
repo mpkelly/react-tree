@@ -154,20 +154,25 @@ test("Copy & cancel", async (t) => {
   await t.expect(Selector("[data-rt-copied]").count).eql(0);
 });
 
+const checkSelection = async (t: TestController, count: number) => {
+  await t.expect(Selector("[data-rt-selected]").count).eql(count);
+  await t.expect(Selector("#selected").textContent).contains(String(count));
+};
+
 test("Selecting & deselecting", async (t) => {
   await t.expect(Selector(Folder1Items).count).eql(4);
   await t.expect(Selector(Folder2Items).count).eql(1);
   // From top to bottom expand the selection with the cursor
   await t.click(Selector(Folder1)).pressKey("shift+down shift+down shift+down");
 
-  await t.expect(Selector("[data-rt-selected]").count).eql(4);
+  await checkSelection(t, 4);
 
   // From bottom to top decrease the selection with the cursor
   await t.pressKey("shift+up shift+up shift+up");
 
   await t.click(Selector(Folder1)).pressKey("shift+down shift+down shift+down");
 
-  await t.expect(Selector("[data-rt-selected]").count).eql(4);
+  await checkSelection(t, 4);
 
   // Deselect a single item while keeping others selected
   await t.click(Selector(File2), {
@@ -176,18 +181,18 @@ test("Selecting & deselecting", async (t) => {
     }
   });
 
-  await t.expect(Selector("[data-rt-selected]").count).eql(3);
+  await checkSelection(t, 3);
 
   await t.click(Selector(File2));
 
-  await t.expect(Selector("[data-rt-selected]").count).eql(1);
+  await checkSelection(t, 1);
 
   await t.pressKey("shift+down");
 
-  await t.expect(Selector("[data-rt-selected]").count).eql(2);
+  await checkSelection(t, 2);
 
   // No modifier key so should reset previous selection
   await t.pressKey("up");
 
-  await t.expect(Selector("[data-rt-selected]").count).eql(1);
+  await checkSelection(t, 1);
 });

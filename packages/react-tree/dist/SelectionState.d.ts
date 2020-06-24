@@ -16,8 +16,11 @@ export interface SelectionState {
      */
     copied: NodeId[];
 }
-export declare const useSelectionState: (tree: TreeNode[], disabled?: boolean, disableMultipleSelection?: boolean, initialSelection?: NodeId[]) => {
+declare type SetSelectionFunction = (selection: SelectionState) => SelectionState;
+declare type handleSelectionChangeType = SelectionState | SetSelectionFunction;
+export declare const useSelectionState: (tree: TreeNode[], onSelectionChange?: (selection: SelectionState) => void, disabled?: boolean, disableMultipleSelection?: boolean, initialSelection?: NodeId[]) => {
     selection: SelectionState;
     handleClick: (event: React.MouseEvent, node: NodeId) => void;
-    setSelection: React.Dispatch<React.SetStateAction<SelectionState>>;
+    handleSelectionChange: (change: handleSelectionChangeType) => void;
 };
+export {};

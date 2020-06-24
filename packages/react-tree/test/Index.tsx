@@ -1,4 +1,4 @@
-import React, { ReactNode, SVGProps, useState } from "react";
+import React, { ReactNode, SVGProps, useState, Fragment } from "react";
 import { render } from "react-dom";
 import {
   TreeNode,
@@ -9,6 +9,7 @@ import {
   Schema,
   NodeId
 } from "../src";
+import { useSelectionState, SelectionState } from "../src/SelectionState";
 
 enum Type {
   File,
@@ -130,6 +131,11 @@ const TreeElement = (props: TreeElementProps) => {
 
 const App = () => {
   const [nodes, setNodes] = useState(flatNodes);
+  const [selection, setSelection] = useState<SelectionState>({
+    selected: [],
+    cut: [],
+    copied: []
+  });
 
   const handleChange = (
     changed: FlatNode[],
@@ -161,14 +167,18 @@ const App = () => {
   };
 
   return (
-    <Tree
-      nodes={nodes}
-      schema={FileSystemSchema}
-      renderElement={renderElement}
-      sortFunction={createAlphaNumericSort("name")}
-      onChange={handleChange}
-      onPaste={handlePaste}
-    />
+    <Fragment>
+      <Tree
+        nodes={nodes}
+        schema={FileSystemSchema}
+        renderElement={renderElement}
+        sortFunction={createAlphaNumericSort("name")}
+        onChange={handleChange}
+        onPaste={handlePaste}
+        onSelectionChange={setSelection}
+      />
+      <div id="selected">{selection.selected.length}</div>
+    </Fragment>
   );
 };
 

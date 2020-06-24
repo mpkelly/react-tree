@@ -6,7 +6,7 @@ import { SelectionState } from "./SelectionState";
 export const useKeyboard = (
   tree: TreeNode[],
   selection: SelectionState,
-  setSelection: React.Dispatch<React.SetStateAction<SelectionState>>,
+  handleSelectionChange: React.Dispatch<React.SetStateAction<SelectionState>>,
   handlePasteNodes: Function,
   handleToggleCollapse: (node: Node) => void,
   disableCut: boolean,
@@ -26,12 +26,12 @@ export const useKeyboard = (
             (steps.current > 0 && delta === -1) ||
             (steps.current < 0 && delta === 1)
           ) {
-            setSelection((current) => ({
+            handleSelectionChange((current) => ({
               ...current,
               selected: selected.slice(1)
             }));
           } else {
-            setSelection((current) => ({
+            handleSelectionChange((current) => ({
               ...current,
               selected: [next.id, ...selected]
             }));
@@ -39,7 +39,10 @@ export const useKeyboard = (
           steps.current += delta;
         } else {
           steps.current = 0;
-          setSelection((current) => ({ ...current, selected: [next.id] }));
+          handleSelectionChange((current) => ({
+            ...current,
+            selected: [next.id]
+          }));
         }
       }
     }
@@ -51,7 +54,7 @@ export const useKeyboard = (
     }
     if (event.metaKey && selection.selected.length) {
       event.preventDefault();
-      setSelection((current) => ({
+      handleSelectionChange((current) => ({
         ...current,
         copied: [],
         cut: selection.selected.slice()
@@ -65,7 +68,7 @@ export const useKeyboard = (
     }
     if (event.metaKey && selection.selected.length) {
       event.preventDefault();
-      setSelection((current) => ({
+      handleSelectionChange((current) => ({
         ...current,
         cut: [],
         copied: selection.selected.slice()
@@ -74,7 +77,7 @@ export const useKeyboard = (
   };
 
   const handleEscape = () => {
-    setSelection((current) => ({
+    handleSelectionChange((current) => ({
       ...current,
       copied: [],
       cut: []

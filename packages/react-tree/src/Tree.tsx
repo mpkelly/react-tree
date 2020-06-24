@@ -26,9 +26,10 @@ export interface TreeProps {
    * a state variable so the <Tree/> should always reflect this value.
    */
   nodes: FlatNode[];
+
   /**
-   * Library users need to implement this and update the node with the value
-   * and also update their own state with the new node for changes to be reflected
+   * Library users need to implement this and update the nodes with the new value
+   * and also update their own state with the new nodes so the changes are reflected
    * in the <Tree/>.
    *
    * @param node The node that changed.
@@ -123,7 +124,7 @@ export interface TreeContextValue {
   handleToggleCollapse(node: Node): void;
   disableDrag: boolean;
   selection: SelectionState;
-  setSelection(selection: SelectionState): void;
+  handleSelectionChange(selection: SelectionState): void;
   handleClick(event: React.MouseEvent, node: NodeId): void;
   renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
 }
@@ -143,6 +144,7 @@ export const Tree = (props: TreeProps) => {
     renderElement,
     onChange,
     onPaste,
+    onSelectionChange,
     sortFunction,
     disableDrag,
     schema,
@@ -160,8 +162,9 @@ export const Tree = (props: TreeProps) => {
     sortTree(treeNodes, sortFunction);
   }
 
-  const { selection, handleClick, setSelection } = useSelectionState(
+  const { selection, handleClick, handleSelectionChange } = useSelectionState(
     treeNodes,
+    onSelectionChange,
     disableSelection,
     disableMultiSelection
   );
@@ -217,7 +220,7 @@ export const Tree = (props: TreeProps) => {
   useKeyboard(
     treeNodes,
     selection,
-    setSelection,
+    handleSelectionChange,
     handlePasteNodes,
     handleToggleCollapse,
     !!disableCut,
@@ -289,7 +292,7 @@ export const Tree = (props: TreeProps) => {
     handleToggleCollapse,
     disableDrag: !!disableDrag,
     selection,
-    setSelection,
+    handleSelectionChange,
     handleClick,
     renderDragImage,
     dragId
