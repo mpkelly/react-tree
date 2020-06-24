@@ -20,11 +20,11 @@ describe("TreeUtils", function () {
   });
 
   test("isMoveValid - with same parent check", async () => {
-    expect(isMoveValid(nodes, [2])).toBe(false);
+    expect(isMoveValid(nodes, [2], true, 1)).toBe(false);
   });
 
   test("isMoveValid - without same parent check", async () => {
-    expect(isMoveValid(nodes, [2], false)).toBe(true);
+    expect(isMoveValid(nodes, [2], false, 1)).toBe(true);
   });
 
   test("isMoveValid - drop on child", async () => {
