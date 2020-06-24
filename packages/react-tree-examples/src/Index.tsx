@@ -8,6 +8,9 @@ import {
   CollapseToggle,
   Schema,
   NodeId,
+  toTreeNodes,
+  toFlatNode,
+  toFlatNodes,
 } from "@mpkelly/react-tree";
 
 // THE DATA
@@ -169,9 +172,20 @@ const App = () => {
     [nodes]
   );
 
-  const handlePaste = (nodes: FlatNode[], parentId: NodeId) => {
-    const newNodes = nodes.map((node) => ({ ...node, parentId, id: id++ }));
-    setNodes((nodes) => nodes.concat(newNodes));
+  const handlePaste = (newNodes: TreeNode[], parentId: NodeId) => {
+    const updateIds = (nodes: TreeNode[], parentId: NodeId) => {
+      nodes.forEach((node) => {
+        //Assign a unique id for every new node
+        node.id = id++;
+        // link to parent
+        node.parentId = parentId;
+        // Update children and pass this node's new id as the parentId
+        updateIds(node.children, node.id);
+      });
+    };
+    updateIds(newNodes, parentId);
+
+    setNodes((nodes) => nodes.concat(toFlatNodes(newNodes, parentId)));
   };
 
   const renderElement = (node: TreeNode, depth: number) => {

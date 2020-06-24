@@ -16,7 +16,7 @@ import {
 import { TreeElement } from "./TreeElement";
 import { Schema } from "./Schema";
 import { useSelectionState, SelectionState } from "./SelectionState";
-import { getSelectedNodeIds, toTreeNodes } from "./NodeUtils";
+import { getSelectedNodeIds, toTreeNodes, findTreeNodeById } from "./NodeUtils";
 import { useKeyboard } from "./Keyboard";
 import { isMoveValid } from "./TreeUtils";
 
@@ -39,15 +39,20 @@ export interface TreeProps {
   onChange?(nodes: FlatNode[], property: keyof FlatNode, value: any): void;
 
   /**
-   * Library users need to implement this unless `disableCopy` is set to true.
-   * The pasted nodes should be added to the `nodes` prop value
-   * so they are reflected in the tree. Note: this is called after copy only. Cut
-   * and pasted nodes are handled using `onChange`.
+   * Library users need to implement this unless `disableCopy` is set to true. This
+   * is called after copy only. Cut and pasted nodes are handled using `onChange`.
    *
-   * @param nodes the nodes that were copied.
+   * The pasted nodes in a tree structure which should be incroporated to the `nodes`
+   * prop value after a new `id` property has been assigned to each node and
+   * the `parentId` has been updated has been updated to reference the new parent
+   * node `id`.
+   *
+   * See the example `handlePaste` function.
+   *
+   * @param nodes the TreeNode that were copied.
    * @param newParentId the `id` if the node they were copied to.
    */
-  onPaste?(nodes: FlatNode[], newParentId: NodeId): void;
+  onPaste?(nodes: TreeNode[], newParentId: NodeId): void;
 
   /**
    * Listen for selection events.
@@ -185,6 +190,7 @@ export const Tree = (props: TreeProps) => {
         isMoveValid(
           nodes,
           changed.map((node) => node.id),
+          true,
           target,
           schema
         )
@@ -202,11 +208,17 @@ export const Tree = (props: TreeProps) => {
         isMoveValid(
           nodes,
           changed.map((node) => node.id),
+          false,
           target,
           schema
         )
       ) {
-        onPaste(changed, target);
+        const rootNodes = getSelectedNodeIds(treeNodes, selection.copied);
+        const changedTree = rootNodes.map((id) => {
+          const result = findTreeNodeById(id, treeNodes);
+          return result?.node as TreeNode;
+        });
+        onPaste(changedTree, target);
       }
     }
   };
@@ -248,7 +260,7 @@ export const Tree = (props: TreeProps) => {
   };
 
   const handleOver = (overId?: NodeId) => {
-    if (isMoveValid(nodes, selected, overId, schema)) {
+    if (isMoveValid(nodes, selected, true, overId, schema)) {
       setOverId(overId);
     } else {
       setOverId(undefined);

@@ -132,6 +132,13 @@ test("Copy & paste", async (t) => {
 
   await t.expect(Selector(Folder1Items).count).eql(6);
   await t.expect(Selector(Folder2Items).count).eql(3);
+
+  await t.click(Selector(Folder2)).pressKey("meta+c");
+
+  await t.click(Selector(Folder1)).pressKey("meta+v");
+
+  await t.expect(Selector(Folder1Items).count).eql(9);
+  await t.expect(Selector(Folder2Items).count).eql(3);
 });
 
 test("Copy & cancel", async (t) => {

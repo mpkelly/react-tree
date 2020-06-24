@@ -5,8 +5,9 @@ import { findTreeNodeById, toFlatNodes, toTreeNodes } from "./NodeUtils";
 export const isMoveValid = (
   nodes: FlatNode[],
   selection: NodeId[],
-  overId: NodeId | undefined,
-  schema: Schema | undefined
+  isCutOrDrop = true,
+  overId?: NodeId,
+  schema?: Schema
 ) => {
   if (overId === undefined) {
     return false;
@@ -14,7 +15,7 @@ export const isMoveValid = (
 
   // eslint-disable-next-line no-restricted-syntax
   for (const dragId of selection) {
-    // Don't allow drop on self
+    // Don't allow drop on self.
     if (dragId === overId) {
       return false;
     }
@@ -26,7 +27,7 @@ export const isMoveValid = (
         return false;
       }
       // Don't allow dropping into existing parent
-      if (dragNode.parentId === overId) {
+      if (isCutOrDrop && dragNode.parentId === overId) {
         return false;
       }
       const overNode = nodes.find((node) => node.id === overId);

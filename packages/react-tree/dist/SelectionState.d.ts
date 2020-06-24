@@ -2,7 +2,8 @@ import React from "react";
 import { NodeId, TreeNode } from "./Node";
 export interface SelectionState {
     /**
-     * Node ids for nodes that have been selected by click or by cursor.
+     * Node ids for nodes that have been selected by click or by cursor. Newly
+     * selected nodes are at the start of the array.
      */
     selected: NodeId[];
     /**

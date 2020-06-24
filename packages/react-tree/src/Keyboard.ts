@@ -103,8 +103,8 @@ export const useKeyboard = (
   /** esline-disable react-hooks/exhaustive-deps */
   const handleKey = (event: KeyboardEvent) => {
     if (document.activeElement !== document.body) {
-      // Ignore key events if other nodes are focused. Might need
-      // make this an API option.
+      // Ignore key events if another `HTMLElement` is focused.
+      // Might need make this an API option.
       return;
     }
     switch (event.key) {

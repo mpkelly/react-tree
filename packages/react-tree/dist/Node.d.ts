@@ -32,16 +32,16 @@ export interface Node {
 }
 /**
  * Flat nodes are nodes stored in a flat array. They keep a reference
- * to their `parentId` so they can be converted into `TreeNodes` which
- * are used by the `<Tree/>` when rendering. A node with no `parentId`
- * becomes a root node on the <Tree/>.
+ * to their parent as `parentId` so they can be converted into `TreeNodes` which
+ * are used by the `Tree` when rendering. A node with no `parentId`
+ * becomes a root node on the `Tree`.
  */
 export interface FlatNode extends Node {
     parentId?: NodeId;
 }
 /**
- * Used by <Tree/> internally. It's really just a `FlatNode` with a children[]
- * property for constructing the tree structure.
+ * A `FlatNode` converted to a tree node with it's `children` array
+ * property set.
  */
 export interface TreeNode extends FlatNode {
     children: TreeNode[];
