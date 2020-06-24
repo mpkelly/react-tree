@@ -24,6 +24,7 @@ A React Tree with a sensible API that supports sorting, drag & drop, keyboard na
 - [x] Exports utilities for working with nodes
 - [x] Multi-select and multi-drag and drop
 - [x] Keyboard support, including navigating, selecting, copying/cutting and pasting
+- [ ] Implement [Tree View accessibility](https://www.w3.org/TR/wai-aria-practices/#TreeView) as per spec (partially completed)
 - [ ] Dropping at precise locations in target
 - [ ] Performance testing and optimisation
 
