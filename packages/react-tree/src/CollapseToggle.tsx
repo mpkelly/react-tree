@@ -24,9 +24,9 @@ export const CollapseToggle = (props: CollapseToggleProps) => {
   }
   return (
     <div
-      data-rt-collapse-toggle
-      data-rt-collapsed={collapsed}
       onClick={() => handleToggleCollapse(node)}
+      data-rt-collapse-toggle
+      aria-pressed={collapsed}
       tabIndex={0}
       role="button"
     >

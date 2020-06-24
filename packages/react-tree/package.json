@@ -69,7 +69,7 @@
     "watch": "webpack -w --mode=development",
     "typings": "tsc -d --emitDeclarationOnly --allowJs false --esModuleInterop true --skipLibCheck true --jsx react --outDir ./dist src/Index.ts",
     "dist": "webpack --mode=production && npm run typings",
-    "publishlib": "npm run dist && npm run test && npx lerna publish"
+    "publishlib": "npm run dist && npm run lint && npm run test && npx lerna publish"
   },
   "eslintIgnore": [
     "*.jest.ts",
