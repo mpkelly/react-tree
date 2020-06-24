@@ -43,7 +43,7 @@ test("Drop selection into folder", async (t) => {
   await t.expect(Selector(Folder2Items).count).eql(3);
 });
 
-test("Collapse and expand", async (t) => {
+test("Collapse & expand", async (t) => {
   //Clicking toggle button
   await t.expect(Selector(Folder1Items).count).eql(4);
   await t
