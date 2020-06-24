@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+/* eslint-disable no-param-reassign */
+import React from "react";
 import { TreeElementProps } from "./TreeElement";
 import { TreeContextValue, useTree } from "./Tree";
 
@@ -13,7 +14,7 @@ export const useTreeElementState = (props: TreeElementProps) => {
     disableDrag,
     selection,
     handleClick,
-    renderDragImage,
+    renderDragImage
   } = useTree() as TreeContextValue;
 
   const onClick = (event: React.MouseEvent) => {
@@ -34,7 +35,7 @@ export const useTreeElementState = (props: TreeElementProps) => {
     "data-rt-type": node.type,
     "data-rt-depth": depth,
     draggable: !dragDisabled,
-    onClick,
+    onClick
   };
 
   if (selected) {
@@ -74,16 +75,13 @@ export const useTreeElementState = (props: TreeElementProps) => {
     handleOver(undefined);
   };
 
-  elementProps.onDrop = useCallback(
-    (event: React.DragEvent) => {
-      event.preventDefault();
-      if (overId !== undefined && overId == node.id) {
-        const id = event.dataTransfer.getData("text/rt-id");
-        handleDrop(id, node.id);
-      }
-    },
-    [overId]
-  );
+  elementProps.onDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    if (overId !== undefined && overId === node.id) {
+      const id = event.dataTransfer.getData("text/rt-id");
+      handleDrop(id, node.id);
+    }
+  };
 
   return elementProps;
 };

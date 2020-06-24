@@ -3,7 +3,7 @@ import React, {
   ReactNode,
   createContext,
   useContext,
-  useCallback,
+  useCallback
 } from "react";
 import {
   TreeNode,
@@ -11,7 +11,7 @@ import {
   NodeId,
   Node,
   TreeNodeSort,
-  sortTree,
+  sortTree
 } from "./Node";
 import { TreeElement } from "./TreeElement";
 import { Schema } from "./Schema";
@@ -130,9 +130,7 @@ export const TreeContext = createContext<TreeContextValue | undefined>(
   undefined
 );
 
-export const useTree = () => {
-  return useContext(TreeContext);
-};
+export const useTree = () => useContext(TreeContext);
 
 /**
  * See docs on `TreeProps`.
@@ -150,7 +148,7 @@ export const Tree = (props: TreeProps) => {
     disableMultiSelection,
     disableCut,
     disableCopy,
-    renderDragImage,
+    renderDragImage
   } = props;
   const treeNodes = toTreeNodes(nodes);
   const [dragId, setDragId] = useState<NodeId>();
@@ -168,12 +166,15 @@ export const Tree = (props: TreeProps) => {
 
   const selected = [...selection.selected, dragId as NodeId];
 
-  const handlePasteNodes = useCallback(() => {
+  const handlePasteNodes = () => {
     const target = selection.selected[0];
     if (target === undefined) {
       return;
     }
     if (selection.cut.length) {
+      if (!onChange) {
+        return;
+      }
       const changed = nodes.filter((node) => selection.cut.includes(node.id));
       if (
         isMoveValid(
@@ -183,9 +184,12 @@ export const Tree = (props: TreeProps) => {
           schema
         )
       ) {
-        onChange && onChange(changed, "parentId", target);
+        onChange(changed, "parentId", target);
       }
     } else {
+      if (!onPaste) {
+        return;
+      }
       const changed = nodes.filter((node) =>
         selection.copied.includes(node.id)
       );
@@ -197,13 +201,15 @@ export const Tree = (props: TreeProps) => {
           schema
         )
       ) {
-        onPaste && onPaste(changed, target);
+        onPaste(changed, target);
       }
     }
-  }, [selection]);
+  };
 
   const handleToggleCollapse = (node: Node) => {
-    onChange && onChange([node], "expanded", !node.expanded);
+    if (onChange) {
+      onChange([node], "expanded", !node.expanded);
+    }
   };
 
   useKeyboard(
@@ -216,39 +222,33 @@ export const Tree = (props: TreeProps) => {
     !!disableCopy
   );
 
-  const handleDrop = useCallback(
-    (dropped: NodeId, target?: NodeId) => {
-      if (target !== undefined) {
-        const node = nodes.find((node) => String(node.id) === String(dropped));
-        if (node && String(node.parentId) !== String(target)) {
-          if (onChange) {
-            const changedIds = getSelectedNodeIds(treeNodes, [
-              ...selection.selected,
-              dragId as NodeId,
-            ]);
-            const changed = changedIds.map((id) =>
-              nodes.find((node) => node.id === id)
-            ) as FlatNode[];
-            onChange(changed, "parentId", target);
-          }
+  const handleDrop = (dropped: NodeId, target?: NodeId) => {
+    if (target !== undefined) {
+      const node = nodes.find((node) => String(node.id) === String(dropped));
+      if (node && String(node.parentId) !== String(target)) {
+        if (onChange) {
+          const changedIds = getSelectedNodeIds(treeNodes, [
+            ...selection.selected,
+            dragId as NodeId
+          ]);
+          const changed = changedIds.map((id) =>
+            nodes.find((node) => node.id === id)
+          ) as FlatNode[];
+          onChange(changed, "parentId", target);
         }
       }
-      setOverId(undefined);
-      setDragId(undefined);
-    },
-    [dragId]
-  );
+    }
+    setOverId(undefined);
+    setDragId(undefined);
+  };
 
-  const handleOver = useCallback(
-    (overId?: NodeId) => {
-      if (isMoveValid(nodes, selected, overId, schema)) {
-        setOverId(overId);
-      } else {
-        setOverId(undefined);
-      }
-    },
-    [selection, dragId]
-  );
+  const handleOver = (overId?: NodeId) => {
+    if (isMoveValid(nodes, selected, overId, schema)) {
+      setOverId(overId);
+    } else {
+      setOverId(undefined);
+    }
+  };
 
   const renderTree = useCallback(
     (nodes: TreeNode[], depth = 0) => {
@@ -259,12 +259,10 @@ export const Tree = (props: TreeProps) => {
         if (node.expanded === undefined || node.expanded) {
           children = renderTree(node.children, depth + 1);
         }
-        let props: any = {};
-
+        const props: any = {};
         if (node.id === overId && overId !== node.parentId) {
           props["data-rt-drop-valid"] = true;
         }
-
         result.push(
           <div data-rt-element-wrapper={node.id} {...props}>
             <TreeElement node={node} depth={depth}>
@@ -276,7 +274,7 @@ export const Tree = (props: TreeProps) => {
       });
       return result;
     },
-    [overId]
+    [overId, renderElement]
   );
 
   const tree = renderTree(treeNodes);
@@ -292,7 +290,7 @@ export const Tree = (props: TreeProps) => {
     setSelection,
     handleClick,
     renderDragImage,
-    dragId,
+    dragId
   };
 
   return (

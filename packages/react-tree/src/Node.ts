@@ -66,11 +66,8 @@ export type TreeNodeSort = (a: TreeNode, b: TreeNode) => number;
  */
 export const createAlphaNumericSort = (
   property: keyof TreeNode
-): TreeNodeSort => {
-  return (a: TreeNode, b: TreeNode) => {
-    return String(a[property]).localeCompare(String(b[property]));
-  };
-};
+): TreeNodeSort => (a: TreeNode, b: TreeNode) =>
+  String(a[property]).localeCompare(String(b[property]));
 
 /**
  * Sort the tree according to the `sortFunction` provided.
@@ -80,8 +77,5 @@ export const createAlphaNumericSort = (
  */
 export const sortTree = (tree: TreeNode[], sortFunction: TreeNodeSort) => {
   tree.sort(sortFunction);
-  tree.forEach((node) => {
-    sortTree(node.children, sortFunction);
-  });
+  tree.forEach((node) => sortTree(node.children, sortFunction));
 };
-

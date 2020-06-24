@@ -7,6 +7,7 @@ import { FlatNode, NodeId, TreeNode } from "./Node";
  * @param parentId the `id` of the parent `TreeNode` unless the node is a root node.
  */
 export const toFlatNode = (node: TreeNode, parentId?: NodeId): FlatNode => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children, ...rest } = node;
   return { ...rest, parentId };
 };
@@ -34,9 +35,10 @@ export const toFlatNodes = (
  *
  * @param node the `FlatNode` to convert.
  */
-export const toTreeNode = (node: FlatNode): TreeNode => {
-  return { ...node, children: [] };
-};
+export const toTreeNode = (node: FlatNode): TreeNode => ({
+  ...node,
+  children: []
+});
 
 /**
  * Convert an array of `FlatNode`s into a tree.
@@ -45,7 +47,9 @@ export const toTreeNode = (node: FlatNode): TreeNode => {
  */
 export const toTreeNodes = (nodes: FlatNode[]): TreeNode[] => {
   const table = Object.create(null);
-  nodes.forEach((node) => (table[node.id] = toTreeNode(node)));
+  nodes.forEach((node) => {
+    table[node.id] = toTreeNode(node);
+  });
   const tree: TreeNode[] = [];
   nodes.forEach((node) => {
     if (node.parentId !== undefined && table[node.parentId]) {
@@ -69,14 +73,14 @@ export const findTreeNodeById = (
   nodes: TreeNode[],
   parent: TreeNode | null = null
 ): { node?: TreeNode; parent?: TreeNode | null } | null => {
-  for (let node of nodes) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const node of nodes) {
     if (node.id === id) {
       return { node, parent };
-    } else {
-      const result = findTreeNodeById(id, node.children, node);
-      if (result) {
-        return result;
-      }
+    }
+    const result = findTreeNodeById(id, node.children, node);
+    if (result) {
+      return result;
     }
   }
   return null;

@@ -12,12 +12,15 @@ export const isMoveValid = (
     return false;
   }
 
-  for (let dragId of selection) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const dragId of selection) {
     // Don't allow drop on self
     if (dragId === overId) {
       return false;
     }
-    const dragNode = nodes.find((node) => node.id === dragId);
+    const dragNode: FlatNode | undefined = nodes.find(
+      (node) => node.id === dragId
+    );
     if (dragNode) {
       if (dragNode.dragDisabled) {
         return false;
@@ -32,7 +35,7 @@ export const isMoveValid = (
         if (search && search.node) {
           const children = toFlatNodes(search.node.children);
           // Don't allow dropping into a child node
-          if (children.find((child) => child.id == overId)) {
+          if (children.find((child) => child.id === overId)) {
             return false;
           }
         }

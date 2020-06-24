@@ -45,9 +45,10 @@ export declare const findTreeNodeById: (id: NodeId, nodes: TreeNode[], parent?: 
 export declare const toList: (tree: TreeNode[], result?: FlatNode[]) => FlatNode[];
 /**
  * Get a sub-list from a tree that has been converted into a list. The sub-list
- * start index is based on the lowest index of the nodes which mapped to the `ids`
- * param. The end index is the highest index of the node which maps to the `ids`
- * param. Both indices are inclusive.
+ * start index is based on the lowest index of the nodes which are mapped from
+ * the `ids` param. The end index is the highest index of the node which
+ * maps from the `ids` param. All intermediate nodes even if their id is not in
+ * the `ids` paramsare returned and both indices are inclusive.
  *
  *  See also `toList`.
  *

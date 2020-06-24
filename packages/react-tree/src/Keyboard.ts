@@ -28,12 +28,12 @@ export const useKeyboard = (
           ) {
             setSelection((current) => ({
               ...current,
-              selected: selected.slice(1),
+              selected: selected.slice(1)
             }));
           } else {
             setSelection((current) => ({
               ...current,
-              selected: [next.id, ...selected],
+              selected: [next.id, ...selected]
             }));
           }
           steps.current += delta;
@@ -54,7 +54,7 @@ export const useKeyboard = (
       setSelection((current) => ({
         ...current,
         copied: [],
-        cut: selection.selected.slice(),
+        cut: selection.selected.slice()
       }));
     }
   };
@@ -68,15 +68,8 @@ export const useKeyboard = (
       setSelection((current) => ({
         ...current,
         cut: [],
-        copied: selection.selected.slice(),
+        copied: selection.selected.slice()
       }));
-    }
-  };
-
-  const handlePaste = (event: KeyboardEvent) => {
-    if ((event.metaKey && selection.cut.length) || selection.copied.length) {
-      handlePasteNodes();
-      handleEscape();
     }
   };
 
@@ -84,8 +77,15 @@ export const useKeyboard = (
     setSelection((current) => ({
       ...current,
       copied: [],
-      cut: [],
+      cut: []
     }));
+  };
+
+  const handlePaste = (event: KeyboardEvent) => {
+    if ((event.metaKey && selection.cut.length) || selection.copied.length) {
+      handlePasteNodes();
+      handleEscape();
+    }
   };
 
   const handleSpace = () => {
@@ -97,6 +97,7 @@ export const useKeyboard = (
     }
   };
 
+  /** esline-disable react-hooks/exhaustive-deps */
   const handleKey = (event: KeyboardEvent) => {
     if (document.activeElement !== document.body) {
       // Ignore key events if other nodes are focused. Might need
@@ -105,19 +106,27 @@ export const useKeyboard = (
     }
     switch (event.key) {
       case "ArrowDown":
-        return handleChange(event, 1);
+        handleChange(event, 1);
+        break;
       case "ArrowUp":
-        return handleChange(event, -1);
+        handleChange(event, -1);
+        break;
       case "x":
-        return handleCut(event);
+        handleCut(event);
+        break;
       case "c":
-        return handleCopy(event);
+        handleCopy(event);
+        break;
       case "v":
-        return handlePaste(event);
+        handlePaste(event);
+        break;
       case "Escape":
-        return handleEscape();
+        handleEscape();
+        break;
       case " ":
-        return handleSpace();
+        handleSpace();
+        break;
+      // no default
     }
   };
 
@@ -126,5 +135,5 @@ export const useKeyboard = (
     return () => {
       window.removeEventListener("keydown", handleKey);
     };
-  }, [selection, list]);
+  });
 };

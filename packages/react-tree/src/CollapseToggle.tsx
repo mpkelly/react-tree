@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { ReactNode } from "react";
 import { TreeNode } from "./Node";
 import { useTree, TreeContextValue } from "./Tree";
@@ -26,6 +27,8 @@ export const CollapseToggle = (props: CollapseToggleProps) => {
       data-rt-collapse-toggle
       data-rt-collapsed={collapsed}
       onClick={() => handleToggleCollapse(node)}
+      tabIndex={0}
+      role="button"
     >
       {children}
     </div>

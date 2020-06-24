@@ -4,7 +4,7 @@ import {
   toFlatNodes,
   toTreeNodes,
   toSubList,
-  getSelectedNodeIds,
+  getSelectedNodeIds
 } from "./NodeUtils";
 
 const tree: TreeNode[] = [
@@ -22,24 +22,24 @@ const tree: TreeNode[] = [
             id: 3,
             type: "",
             parentId: 2,
-            children: [],
+            children: []
           },
           {
             id: 5,
             type: "",
             parentId: 2,
-            children: [],
-          },
-        ],
+            children: []
+          }
+        ]
       },
       {
         id: 4,
         type: "",
         parentId: 1,
-        children: [],
-      },
-    ],
-  },
+        children: []
+      }
+    ]
+  }
 ];
 
 const flat: FlatNode[] = [
@@ -47,7 +47,7 @@ const flat: FlatNode[] = [
   { id: 2, type: "", parentId: 1 },
   { id: 3, type: "", parentId: 2 },
   { id: 5, type: "", parentId: 2 },
-  { id: 4, type: "", parentId: 1 },
+  { id: 4, type: "", parentId: 1 }
 ];
 
 const list: FlatNode[] = [
@@ -55,7 +55,7 @@ const list: FlatNode[] = [
   { id: 2, type: "", parentId: 1 },
   { id: 3, type: "", parentId: 2 },
   { id: 5, type: "", parentId: 2 },
-  { id: 4, type: "", parentId: 1 },
+  { id: 4, type: "", parentId: 1 }
 ];
 
 describe("NodeUtils", function () {
