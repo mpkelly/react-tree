@@ -44,7 +44,7 @@ export interface TreeProps {
    *
    * The pasted nodes in a tree structure which should be incroporated to the `nodes`
    * prop value after a new `id` property has been assigned to each node and
-   * the `parentId` has been updated has been updated to reference the new parent
+   * the `parentId` has been updated to reference the new parent
    * node `id`.
    *
    * See the example `handlePaste` function.
