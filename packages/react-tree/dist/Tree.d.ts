@@ -31,9 +31,11 @@ export interface TreeProps {
     /**
      * Listen for selection events.
      *
+     * see `SelectionState`
+     *
      * @param selected the nodes that are selected
      */
-    onSelectionChange?(selected: Node[]): void;
+    onSelectionChange?(selected: SelectionState): void;
     /**
      * Render a single node however you like. The output of this call will be wrapped
      * in an internal `TreeElement` wrapper which is setup for drag and drop.

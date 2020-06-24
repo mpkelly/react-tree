@@ -7,46 +7,49 @@ import {
   Tree,
   CollapseToggle,
   Schema,
+  NodeId
 } from "../src";
 
 enum Type {
   File,
-  Folder,
+  Folder
 }
 
 const FileSystemSchema: Schema = {
   rules: {
     [Type.Folder]: [Type.Folder, Type.File],
-    [Type.File]: [],
-  },
+    [Type.File]: []
+  }
 };
+
+let id = 0;
 
 const flatNodes: FlatNode[] = [
   {
-    id: 0,
+    id: id++,
     expanded: true,
     type: Type.Folder,
-    name: "Folder one",
+    name: "Folder one"
   },
   {
-    id: 1,
+    id: id++,
     type: Type.File,
     parentId: 0,
-    name: "File one",
+    name: "File one"
   },
   {
-    id: 2,
+    id: id++,
     type: Type.File,
     parentId: 0,
-    name: "File two",
+    name: "File two"
   },
   {
-    id: 3,
+    id: id++,
     expanded: true,
     parentId: 0,
     type: Type.Folder,
-    name: "Folder two",
-  },
+    name: "Folder two"
+  }
 ];
 
 const ArrowRightIcon = (props: SVGProps<SVGSVGElement>) => (
@@ -129,17 +132,22 @@ const App = () => {
   const [nodes, setNodes] = useState(flatNodes);
 
   const handleChange = (
-    changed: FlatNode,
+    changed: FlatNode[],
     property: keyof FlatNode,
     value: any
   ) => {
-    setNodes((nodes) => {
-      const next = nodes.slice();
-      (next.find((node) => node.id == changed.id) as FlatNode)[
-        property
-      ] = value;
-      return next;
+    const next = nodes.slice();
+    changed.forEach((changed) => {
+      const node = next.find((node) => node.id == changed.id) as FlatNode;
+      const nextNode = { ...node, [property]: value };
+      next.splice(next.indexOf(node), 1, nextNode);
     });
+    setNodes(next);
+  };
+
+  const handlePaste = (nodes: FlatNode[], parentId: NodeId) => {
+    const newNodes = nodes.map((node) => ({ ...node, parentId, id: id++ }));
+    setNodes((nodes) => nodes.concat(newNodes));
   };
 
   const renderElement = (node: TreeNode, depth: number) => {
@@ -159,6 +167,7 @@ const App = () => {
       renderElement={renderElement}
       sortFunction={createAlphaNumericSort("name")}
       onChange={handleChange}
+      onPaste={handlePaste}
     />
   );
 };

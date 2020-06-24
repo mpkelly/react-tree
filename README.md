@@ -1,12 +1,12 @@
 # react-tree
 
-A React Tree that supports drag and drop. I wrote this out of frustration after trying several other trees. In total I must have used 5-6 trees for React but none of them felt quite right: some were too buggy and others had whacky data models or didn't allow me to do X.
+A React Tree with a sensible API that supports sorting, drag & drop, keyboard navigation, cut/copy and paste. You can also provide a Schema to control which moves are valid.
 
 ### Install
 
 `npm i @mpkelly/react-tree`
 
-### Demoes
+### Demos
 
 - [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/App.tsx)
 - Lazy children demo
@@ -22,18 +22,18 @@ A React Tree that supports drag and drop. I wrote this out of frustration after 
 - [x] Custom sorting functions
 - [x] Simple, declarative Schema
 - [x] Exports utilities for working with nodes
+- [x] Multi-select and multi-drag and drop
+- [x] Keyboard support, including navigating, selecting, copying/cutting and pasting
 - [ ] Dropping at precise locations in target
-- [ ] Multi-select and multi-drag and drop
-- [ ] Keyboard support and better a11y
 - [ ] Performance testing and optimisation
 
-I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't immediately add the last few features but they will be added once I have relaunched Journal this month.
+I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't need to drop a precise locations but may add this in future.
 
 ### API
 
 #### Nodes
 
-To make use of the tree you just need to provide an array of `FlatNodes`.
+To make use of the tree you just need to provide an array of [FlatNodes](https://github.com/mpkelly/react-tree/blob/master/packages/react-tree/src/Node.ts).
 
 ```TypeScript
 
@@ -44,6 +44,7 @@ export interface Node {
   id: NodeId;
   type: NodeType;
   expanded?: boolean;
+  dragDisabled?:boolean;
   [key: string]: any;
 }
 
@@ -86,7 +87,7 @@ const flatNodes: FlatNode[] = [
     expanded: true,
     type: Type.Folder,
     
-    //Note how FlatNode supports any additional properties you need
+    //Note how FlatNode supports any arbitrary properties
     name: "Folder one",
   },
   {
@@ -103,7 +104,7 @@ If you need to do more advanced validation that can't be easily described by sim
 
 #### Expand / collapse
 
-React Tree has a small helper component that helps you deal with toggling a node expanded/collapsed. It accepts any valid `ReactNode` as children as well as the `Node` being rendered. You can see the demoes above for how to make use of this fully but the basic usage looks like:
+React Tree has a small helper component that helps you deal with toggling a node expanded/collapsed. It accepts any valid `ReactNode` as children as well as the `Node` being rendered. It is also accessible and uses `aria` attributes and responds to the `space` key. You can see the demos above for how to make use of this fully but the basic usage looks like:
 
 ```TypeScript
 const FolderElement = (props: TreeElementProps) => {
@@ -122,20 +123,41 @@ const FolderElement = (props: TreeElementProps) => {
 
 #### Styling
 
-React Tree doesn't provide styling because it doesn't render anything by itself but it does set some data attributes on wrapper elements. Here's some styling from one of the examples:
+React Tree doesn't provide styling because it doesn't render anything visible by itself but it does set some data attributes on wrapper elements. Here's some styling from one of the examples:
 
 ```CSS
  
-    // This property is set on a node when another node that it can accept as a child is dragged over it - you will want to use some visual indicator so the user knows they can release
+    // This attribute is set on a node when another node that it can accept as a child is dragged over it - you will want to use some visual indicator so the user knows they can release
     [data-rt-drop-valid] {
       background-color: rgba(0, 0, 0, .1);
     }
 
-    // Applied to the <TreeElement/> wrapper which wraps the UI you render for each Node with `renderElement`
-    // This wrapper will include children to if present
+    // Set on nodes which have been selected by clicking to using cursor.
+    // More than one node can be selected unless `disableMultipleSelection` is set.
+    [data-rt-selected] {
+      background-color: rgba(0, 0, 0, .2);
+    }
+
+    // Attribute added to nodes that have been cut (ctrl+x) but not yet pasted
+    [data-rt-cut] {
+      opacity: .4
+    }
+
+    // Attribute added to nodes that have been copied (ctrl+c) but not yet pasted
+    [data-rt-copied] {
+      background-color: rgba(0, 0, 0, .05);
+    }
+
+    // Applied to the <TreeElement/> wrapper `div` which wraps the UI you render for each Node with `renderElement`
+    // This wrapper will include child <TreeElement/>s  if present
     [data-rt-element-wrapper] {
 
     }
+
+    // Applied to a single <TreeElement/> that you render for each Node with `renderElement`
+    [data-rt-element] {
+
+    }
 
     // Output on the above wrappper allowing you target specific types
     [data-rt-type="type"] {
@@ -180,6 +202,8 @@ The `onChange` callback should look something like this:
 React Tree also exports some utilities that can help you delete a `FlatNode` and its children. An example:
 
 ```TypeScript
+import {toTreeNodes, toFlatNodes, findTreeNodeById} from "@mpkelly/react-tree"
+...
 
 //Construct a tree from `FlatNode` array
 const tree = toTreeNodes(nodes);
@@ -200,27 +224,99 @@ if (result && result.node) {
 
 #### Tree
 
-The Tree API. Note how most properties are optional
+The Tree API. Note how most properties are optional.
 
 ```TypeScript
 export interface TreeProps {
+  /**
+   * The nodes to create a Tree from. This property is *not* converted into
+   * a state variable so the <Tree/> will always reflect this value.
+   */
+  nodes: FlatNode[];
 
-  // Your node array from the DB or API
-  nodes: FlatNode[];  
- 
-  // A function that renders your node. You can easily convert the depth into horizontal padding
-  renderElement(node: TreeNode, depth: number): JSX.Element;
+  /**
+   * Library users need to implement this and update the node with the value
+   * and also update their own state with the new node for changes to be reflected
+   * in the <Tree/>.
+   *
+   * @param node The node that changed.
+   * @param property The property that changed
+   * @param value The new value
+   */
+  onChange?(nodes: FlatNode[], property: keyof FlatNode, value: any): void;
 
-  // Change events are fired when the `expanded` property changes or the `parentId` changes
-  onChange?(node: FlatNode, property: keyof FlatNode, value: any): void;
- 
-  // You will typical want to set this using the exported `createAlphaNumericSort` function e.g. `createAlphaNumericSort("name") to sort your items by the Node's name property. If not set items will be appended into their new parent
-  sortFunction?: TreeNodeSort;
- 
-  // Disable drag and drop
-  readOnly?: boolean;
- 
-  // Schema is optional but without one all nodes will accept all other nodes as children
-  schema?: Schema;
+  /**
+   * Library users need to implement this unless `disableCopy` is set to true.
+   * The pasted nodes should be added to the `nodes` prop value
+   * so they are reflected in the tree. Note: this is called after copy only. Cut
+   * and pasted nodes are handled using `onChange`.
+   *
+   * @param nodes the nodes that were copied.
+   * @param newParentId the `id` if the node they were copied to.
+   */
+  onPaste?(nodes: FlatNode[], newParentId: NodeId): void;
+
+  /**
+   * Listen for selection events.
+   *
+   * @param selected the nodes that are selected
+   */
+  onSelectionChange?(selected: Node[]): void;
+
+  /**
+   * Render a single node however you like. The output of this call will be wrapped
+   * in an internal `TreeElement` wrapper which is setup for drag and drop.
+   *
+   * @param node The `TreeNode` to be rendered. This is created
+   * form the `FlatNode` provided to the `nodes` prop
+   *
+   * @param depth The node's depth in the tree. Useful for apply
+   * horizontal padding. Zero is root.
+   */
+  renderElement(node: TreeNode, depth: number): JSX.Element;
+
+  /**
+   * Set constraints. See `Schema`.
+   */
+  schema?: Schema;
+
+  /**
+   * Pass a sort function to make the Tree sorted. You can use the exported
+   * function `createAlphaNumericSort` for most cases. The default behaviour is to append
+   * dropped nodes to the parent node's `children` array.
+   */
+  sortFunction?: TreeNodeSort;
+
+  /**
+   * Disable drag and drop. Default false.
+   */
+  disableDrag?: boolean;
+
+  /**
+   *  Disable all selection. Default false.
+   */
+  disableSelection?: boolean;
+
+  /**
+   *  Disable multiple selection. Default false.
+   */
+  disableMultiSelection?: boolean;
+
+  /**
+   *  Disable support for cutting and pasting nodes. Default false.
+   */
+  disableCut?: boolean;
+
+  /**
+   *  Disable support for copying (adding) and pasting nodes. Default false.
+   */
+  disableCopy?: boolean;
+
+  /**
+   * Override the browser's default drag image.
+   *
+   * @param nodes the ids of the Nodes that are being dragged
+   */
+  renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
 }
 ```
