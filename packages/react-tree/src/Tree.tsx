@@ -353,6 +353,7 @@ export const Tree = (props: TreeProps) => {
             tabIndex={focused ? 0 : -1}
             {...props}
             style={ListItemStyle}
+            key={node.id}
           >
             <TreeElement node={node} depth={depth}>
               {nodeItem}

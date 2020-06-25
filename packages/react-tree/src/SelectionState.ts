@@ -8,6 +8,7 @@ export interface SelectionState {
    * `tabindex="0"`, otherwise false.
    */
   focused: boolean;
+
   /**
    * Node ids for nodes that have been selected by click or by cursor. Newly
    * selected nodes are at the start of the array.
@@ -57,7 +58,11 @@ export const useSelectionState = (
   };
 
   const handleBlur = () => {
-    setSelection((current) => ({ ...current, focused: false }));
+    let next: SelectionState = { ...selection, focused: false };
+    setSelection(next);
+    if (onSelectionChange) {
+      onSelectionChange(next);
+    }
   };
 
   const handleClick = useCallback(
