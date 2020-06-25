@@ -58,7 +58,7 @@ export const useSelectionState = (
   };
 
   const handleBlur = () => {
-    let next: SelectionState = { ...selection, focused: false };
+    const next: SelectionState = { ...selection, focused: false };
     setSelection(next);
     if (onSelectionChange) {
       onSelectionChange(next);
@@ -95,7 +95,7 @@ export const useSelectionState = (
         handleSelectionChange((current) => ({ ...current, selected: [node] }));
       }
     },
-    [tree, selection, disabled, disableMultipleSelection]
+    [tree, selection, disabled, disableMultipleSelection, handleSelectionChange]
   );
 
   return { selection, handleClick, handleSelectionChange, handleBlur };
