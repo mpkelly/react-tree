@@ -3,6 +3,12 @@ import { Node, TreeNode, NodeId, FlatNode } from "./Node";
 import { toList, findTreeNodeById } from "./NodeUtils";
 import { SelectionState } from "./SelectionState";
 
+/**
+ * Most of this functionality is based on the W3C ARIA specification for
+ * Treeviews.
+ *
+ * https://www.w3.org/TR/wai-aria-practices/examples/treeview/treeview-1/treeview-1b.html#kbd_label
+ */
 export const useKeyboard = (
   tree: TreeNode[],
   selection: SelectionState,
