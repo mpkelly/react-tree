@@ -161,7 +161,7 @@ export interface TreeContextValue {
   handleDrag(id?: NodeId): void;
   handleOver(id?: NodeId): void;
   handleDrop(dropped: NodeId, target?: NodeId): void;
-  handleToggleCollapse(node: Node): void;
+  handleToggleCollapse(nodes: Node[]): void;
   disableDrag: boolean;
   selection: SelectionState;
   handleSelectionChange(selection: SelectionState): void;
@@ -280,9 +280,9 @@ export const Tree = (props: TreeProps) => {
     }
   };
 
-  const handleToggleCollapse = (node: Node) => {
+  const handleToggleCollapse = (nodes: Node[]) => {
     if (onChange) {
-      onChange([node], "expanded", !node.expanded);
+      onChange(nodes, "expanded", !nodes[0].expanded);
     }
   };
 
@@ -313,6 +313,7 @@ export const Tree = (props: TreeProps) => {
         }
       }
     }
+
     setOverId(undefined);
     setDragId(undefined);
   };

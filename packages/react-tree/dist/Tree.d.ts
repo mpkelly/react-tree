@@ -70,8 +70,8 @@ export interface TreeProps {
     schema?: Schema;
     /**
      * Pass a sort function to make the Tree sorted. You can use the exported
-     * function `createAlphaNumericSort` for most cases. The default behaviour is to append
-     * dropped nodes to the parent node's `children` array.
+     * function `createAlphaNumericSort` for most cases. If you don't set this
+     * prop then an alphanumeric sort is is used based on the `nameProperty` prop.
      */
     sortFunction?: TreeNodeSort;
     /**
@@ -107,9 +107,9 @@ export interface TreeProps {
      */
     renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
     /**
-     * The ARIA label ID. This should be the ID of heading element which explains
+     * The ARIA label Id. This should be the Id of heading element which explains
      * what the tree is used for. This element can be visually hidden if necessary
-     * but needs to present in ARIA.
+     * but needs to present in accessible applications.
      *
      * See:
      *
@@ -125,7 +125,7 @@ export interface TreeContextValue {
     handleDrag(id?: NodeId): void;
     handleOver(id?: NodeId): void;
     handleDrop(dropped: NodeId, target?: NodeId): void;
-    handleToggleCollapse(node: Node): void;
+    handleToggleCollapse(nodes: Node[]): void;
     disableDrag: boolean;
     selection: SelectionState;
     handleSelectionChange(selection: SelectionState): void;

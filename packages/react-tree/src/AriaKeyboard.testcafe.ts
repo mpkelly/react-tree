@@ -8,6 +8,7 @@ const Folder1 = '[data-id="0"]';
 const File1 = '[data-id="1"]';
 const File2 = '[data-id="2"]';
 const Folder2 = '[data-id="3"]';
+const Folder3 = '[data-id="4"]';
 
 const checkFocus = async (t: TestController, selector: string) => {
   await t
@@ -165,14 +166,40 @@ test("Search by first char", async (t) => {
 });
 
 test("Asterisk", async (t) => {
+  await focusLastNode(t);
+  await t.pressKey("meta+c");
   await focusFirstNode(t);
-  //Collapse folder
-  await t.pressKey("space");
-  //Should expand current level
-  await t.typeText(Folder1, "*");
+  await t.pressKey("meta+v");
+  // Collapse both folders
+  await t.pressKey("down down down space down space");
+
   await t
     .expect(
-      Selector(Folder1).parent().parent().withAttribute("aria-expanded", "true")
+      Selector(Folder2)
+        .parent()
+        .parent()
+        .withAttribute("aria-expanded", "false")
+    )
+    .ok();
+  await t
+    .expect(
+      Selector(Folder3)
+        .parent()
+        .parent()
+        .withAttribute("aria-expanded", "false")
+    )
+    .ok();
+
+  //Expand all folders on current level
+  await t.typeText(File1, "*");
+  await t
+    .expect(
+      Selector(Folder2).parent().parent().withAttribute("aria-expanded", "true")
+    )
+    .ok();
+  await t
+    .expect(
+      Selector(Folder3).parent().parent().withAttribute("aria-expanded", "true")
     )
     .ok();
 });

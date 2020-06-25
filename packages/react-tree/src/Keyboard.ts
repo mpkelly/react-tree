@@ -15,7 +15,7 @@ export const useKeyboard = (
   filterProperty: keyof FlatNode,
   handleSelectionChange: React.Dispatch<React.SetStateAction<SelectionState>>,
   handlePasteNodes: Function,
-  handleToggleCollapse: (node: Node) => void,
+  handleToggleCollapse: (node: Node[]) => void,
   disableCut: boolean,
   disableCopy: boolean
 ) => {
@@ -68,13 +68,13 @@ export const useKeyboard = (
         // Left or up
         if (delta === -1) {
           if (focused.children.length && focused.expanded) {
-            handleToggleCollapse(focused);
+            handleToggleCollapse([focused]);
           } else {
             handleVerticalMove(event, -1);
           }
           // Right or down
         } else if (focused.children.length && !focused.expanded) {
-          handleToggleCollapse(focused);
+          handleToggleCollapse([focused]);
         } else {
           handleVerticalMove(event, 1);
         }
@@ -138,7 +138,7 @@ export const useKeyboard = (
     if (selection.selected.length) {
       const selected = list.find((node) => node.id === selection.selected[0]);
       if (selected) {
-        handleToggleCollapse(selected);
+        handleToggleCollapse([selected]);
       }
     }
   };
@@ -148,13 +148,14 @@ export const useKeyboard = (
     if (result) {
       const { node, parent } = result;
       if (parent) {
-        parent.children.forEach((child) => {
-          if (child.children.length && !child.expanded) {
-            handleToggleCollapse(child);
-          }
-        });
+        const collapsed = parent.children.filter(
+          (child) => child.children.length && !child.expanded
+        );
+        if (collapsed.length) {
+          handleToggleCollapse(collapsed);
+        }
       } else if (node && !node?.expanded) {
-        handleToggleCollapse(node);
+        handleToggleCollapse([node]);
       }
     }
   };

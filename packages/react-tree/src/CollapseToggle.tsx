@@ -17,14 +17,9 @@ export const CollapseToggle = (props: CollapseToggleProps) => {
   const { children, node } = props;
   const collapsed = !node.expanded;
   const { handleToggleCollapse } = useTree() as TreeContextValue;
-  if (!handleToggleCollapse) {
-    throw Error(
-      "It looks like you're trying to use CollapseToggle outside of the <Tree/> scope"
-    );
-  }
   return (
     <div
-      onClick={() => handleToggleCollapse(node)}
+      onClick={() => handleToggleCollapse([node])}
       data-rt-collapse-toggle
       aria-pressed={collapsed}
       tabIndex={0}
