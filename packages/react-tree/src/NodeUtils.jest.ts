@@ -4,7 +4,8 @@ import {
   toFlatNodes,
   toTreeNodes,
   toSubList,
-  getSelectedNodeIds
+  getSelectedNodeIds,
+  toList
 } from "./NodeUtils";
 
 const tree: TreeNode[] = [
@@ -17,6 +18,7 @@ const tree: TreeNode[] = [
         id: 2,
         type: "",
         parentId: 1,
+        expanded: false,
         children: [
           {
             id: 3,
@@ -44,7 +46,7 @@ const tree: TreeNode[] = [
 
 const flat: FlatNode[] = [
   { id: 1, type: "", parentId: undefined },
-  { id: 2, type: "", parentId: 1 },
+  { id: 2, type: "", parentId: 1, expanded: false },
   { id: 3, type: "", parentId: 2 },
   { id: 5, type: "", parentId: 2 },
   { id: 4, type: "", parentId: 1 }
@@ -52,9 +54,15 @@ const flat: FlatNode[] = [
 
 const list: FlatNode[] = [
   { id: 1, type: "", parentId: undefined },
-  { id: 2, type: "", parentId: 1 },
+  { id: 2, type: "", parentId: 1, expanded: false },
   { id: 3, type: "", parentId: 2 },
   { id: 5, type: "", parentId: 2 },
+  { id: 4, type: "", parentId: 1 }
+];
+
+const expandedList: FlatNode[] = [
+  { id: 1, type: "", parentId: undefined },
+  { id: 2, type: "", parentId: 1, expanded: false },
   { id: 4, type: "", parentId: 1 }
 ];
 
@@ -90,8 +98,12 @@ describe("NodeUtils", function () {
     expect(result?.parent?.id).toEqual(undefined);
   });
 
-  test("toList", async () => {
-    expect(toFlatNodes(tree)).toEqual(list);
+  test("toList - include collapsed", async () => {
+    expect(toList(tree)).toEqual(list);
+  });
+
+  test("toList - exclude collapsed", async () => {
+    expect(toList(tree, false)).toEqual(expandedList);
   });
 
   test("toSubList", async () => {

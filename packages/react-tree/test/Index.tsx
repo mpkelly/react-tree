@@ -133,6 +133,7 @@ const TreeElement = (props: TreeElementProps) => {
 const App = () => {
   const [nodes, setNodes] = useState(flatNodes);
   const [selection, setSelection] = useState<SelectionState>({
+    focused: false,
     selected: [],
     cut: [],
     copied: []
@@ -188,6 +189,7 @@ const App = () => {
         onChange={handleChange}
         onPaste={handlePaste}
         onSelectionChange={setSelection}
+        nameProperty="name"
       />
       <div id="selected">{selection.selected.length}</div>
     </Fragment>

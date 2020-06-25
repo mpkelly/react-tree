@@ -92,13 +92,16 @@ export const findTreeNodeById = (
  * @param tree the tree as an array of `TreeNodes`.
  * @param result optional, the array to collect the results into.
  */
-export const toList = (tree: TreeNode[], result: FlatNode[] = []) => {
+export const toList = (
+  tree: TreeNode[],
+  includeCollapsed = true,
+  result: FlatNode[] = []
+) => {
   tree.forEach((node) => {
     result.push(toFlatNode(node, node.parentId));
-    node.children.forEach((child) => {
-      result.push(toFlatNode(child, child.parentId));
-      toList(child.children, result);
-    });
+    if (includeCollapsed || node.expanded === undefined || node.expanded) {
+      toList(node.children, includeCollapsed, result);
+    }
   });
   return result;
 };

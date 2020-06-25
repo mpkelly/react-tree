@@ -42,7 +42,7 @@ export declare const findTreeNodeById: (id: NodeId, nodes: TreeNode[], parent?: 
  * @param tree the tree as an array of `TreeNodes`.
  * @param result optional, the array to collect the results into.
  */
-export declare const toList: (tree: TreeNode[], result?: FlatNode[]) => FlatNode[];
+export declare const toList: (tree: TreeNode[], includeCollapsed?: boolean, result?: FlatNode[]) => FlatNode[];
 /**
  * Get a sub-list from a tree that has been converted into a list. The sub-list
  * start index is based on the lowest index of the nodes which are mapped from

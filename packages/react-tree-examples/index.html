@@ -50,6 +50,14 @@
       opacity: .4
     }
 
+    [data-rt-tree] li {
+      outline: none !important;
+    }
+
+    [data-rt-tree] li[tabindex="0"]> :first-child {
+      outline: 2px solid blue;
+    }
+
     [data-rt-copied] {
       background-color: rgba(0, 0, 0, .05);
     }

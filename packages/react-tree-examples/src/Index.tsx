@@ -35,7 +35,6 @@ const flatNodes: FlatNode[] = [
     id: id++,
     expanded: true,
     type: Type.Folder,
-    dragDisabled: true,
     //FlatNode supports any additional properties you need
     name: "Folder one",
   },
@@ -53,18 +52,6 @@ const flatNodes: FlatNode[] = [
   },
   {
     id: id++,
-    type: Type.File,
-    parentId: 0,
-    name: "File three",
-  },
-  {
-    id: id++,
-    type: Type.File,
-    parentId: 0,
-    name: "File five",
-  },
-  {
-    id: id++,
     expanded: true,
     parentId: 0,
     type: Type.Folder,
@@ -72,10 +59,27 @@ const flatNodes: FlatNode[] = [
   },
   {
     id: id++,
-    expanded: true,
-    parentId: 0,
-    type: Type.Folder,
-    name: "Folder three",
+    type: Type.File,
+    parentId: 3,
+    name: "File three",
+  },
+  {
+    id: id++,
+    type: Type.File,
+    parentId: 3,
+    name: "File four",
+  },
+  {
+    id: id++,
+    type: Type.File,
+    parentId: 3,
+    name: "File five",
+  },
+  {
+    id: id++,
+    type: Type.File,
+    parentId: 3,
+    name: "File six",
   },
 ];
 
@@ -206,6 +210,7 @@ const App = () => {
       sortFunction={createAlphaNumericSort("name")}
       onChange={handleChange}
       onPaste={handlePaste}
+      nameProperty="name"
     />
   );
 };

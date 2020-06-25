@@ -11,9 +11,6 @@ const File2 = '[data-rt-element="2"]';
 const Folder2 = '[data-rt-element="3"]';
 
 test("Drop a file into a folder", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
-
   await t.dragToElement(File1, Folder2);
 
   await t.expect(Selector(Folder1Items).count).eql(4);
@@ -26,9 +23,6 @@ test("Drop a file into a folder", async (t) => {
 });
 
 test("Drop selection into folder", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
-
   await t.click(Selector(File1));
   await t.click(Selector(File2), {
     modifiers: {
@@ -69,9 +63,6 @@ test("Collapse & expand", async (t) => {
 });
 
 test("Cut & paste", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
-
   await t.click(Selector(File1));
   await t
     .click(Selector(File2), {
@@ -92,9 +83,6 @@ test("Cut & paste", async (t) => {
 });
 
 test("Cut & cancel", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
-
   await t.click(Selector(File1));
   await t
     .click(Selector(File2), {
@@ -112,9 +100,6 @@ test("Cut & cancel", async (t) => {
 });
 
 test("Copy & paste", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
-
   await t.click(Selector(File1));
   await t
     .click(Selector(File2), {
@@ -142,9 +127,6 @@ test("Copy & paste", async (t) => {
 });
 
 test("Copy & cancel", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
-
   await t.click(Selector(File1));
   await t
     .click(Selector(File2), {
@@ -167,8 +149,6 @@ const checkSelection = async (t: TestController, count: number) => {
 };
 
 test("Selecting & deselecting", async (t) => {
-  await t.expect(Selector(Folder1Items).count).eql(4);
-  await t.expect(Selector(Folder2Items).count).eql(1);
   // From top to bottom expand the selection with the cursor
   await t.click(Selector(Folder1)).pressKey("shift+down shift+down shift+down");
 

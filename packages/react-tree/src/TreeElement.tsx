@@ -15,7 +15,7 @@ export const TreeElement = (props: TreeElementProps) => {
   const elementProps = useTreeElementState(props);
   const draggable = !(node.dragDisabled || dragDisabled);
   return (
-    <div key={id} draggable={draggable} {...elementProps}>
+    <div key={id} draggable={draggable} role="treeitem" {...elementProps}>
       {children}
     </div>
   );

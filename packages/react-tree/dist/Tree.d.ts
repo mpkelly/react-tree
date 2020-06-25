@@ -9,6 +9,17 @@ export interface TreeProps {
      */
     nodes: FlatNode[];
     /**
+     * The property on your `FlatNode` which serves as the name. This is text
+     * the user sees for each node and is typically be called `name` or `title`. This
+     * is required to support searching in ARIA and is also used to creating a
+     * sorting function if prop `sortFunction` is not set.
+     *
+     * See:
+     *
+     * https://www.w3.org/TR/wai-aria-practices/examples/treeview/treeview-1/treeview-1b.html#kbd_label
+     */
+    nameProperty: keyof FlatNode;
+    /**
      * Library users need to implement this and update the nodes with the new value
      * and also update their own state with the new nodes so the changes are reflected
      * in the <Tree/>.
@@ -27,7 +38,8 @@ export interface TreeProps {
      * the `parentId` has been updated to reference the new parent
      * node `id`.
      *
-     * See the example `handlePaste` function.
+     * See the example code for a possible implementation of the
+     * `handlePaste` function.
      *
      * @param nodes the TreeNode that were copied.
      * @param newParentId the `id` if the node they were copied to.
@@ -83,11 +95,29 @@ export interface TreeProps {
      */
     disableCopy?: boolean;
     /**
+     *  The `id` of the node which should be focused, if any. The tree does
+     *  not ensure this node is visible in an expanded parent or perform any
+     *  scrolling. Default behaviour is not to focus any nodes.
+     */
+    initialFocusedNodeId?: NodeId;
+    /**
      * Override the browser's default drag image.
      *
      * @param nodes the ids of the Nodes that are being dragged
      */
     renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
+    /**
+     * The ARIA label ID. This should be the ID of heading element which explains
+     * what the tree is used for. This element can be visually hidden if necessary
+     * but needs to present in ARIA.
+     *
+     * See:
+     *
+     * https://www.w3.org/TR/wai-aria-practices/examples/treeview/treeview-1/treeview-1b.html#kbd_label
+     * https://a11yproject.com/posts/how-to-hide-content/
+     *
+     */
+    labelledbyId?: string;
 }
 export interface TreeContextValue {
     overId?: NodeId;

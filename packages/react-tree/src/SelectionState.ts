@@ -4,6 +4,11 @@ import { toSubList } from "./NodeUtils";
 
 export interface SelectionState {
   /**
+   * This is true if a node in the tree has been focused by setting
+   * `tabindex="0"`, otherwise false.
+   */
+  focused: boolean;
+  /**
    * Node ids for nodes that have been selected by click or by cursor. Newly
    * selected nodes are at the start of the array.
    */
@@ -33,6 +38,7 @@ export const useSelectionState = (
   initialSelection: NodeId[] = []
 ) => {
   const [selection, setSelection] = useState<SelectionState>({
+    focused: !!initialSelection.length,
     selected: initialSelection,
     cut: [],
     copied: []
@@ -43,10 +49,15 @@ export const useSelectionState = (
     if (typeof change === "function") {
       next = change(selection);
     }
+    (next as SelectionState).focused = true;
     setSelection(next);
     if (onSelectionChange) {
       onSelectionChange(next as SelectionState);
     }
+  };
+
+  const handleBlur = () => {
+    setSelection((current) => ({ ...current, focused: false }));
   };
 
   const handleClick = useCallback(
@@ -82,5 +93,5 @@ export const useSelectionState = (
     [tree, selection, disabled, disableMultipleSelection]
   );
 
-  return { selection, handleClick, handleSelectionChange };
+  return { selection, handleClick, handleSelectionChange, handleBlur };
 };

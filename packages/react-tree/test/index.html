@@ -23,6 +23,7 @@
 
     #app {
       width: 200px;
+      padding: 16px;
     }
 
     [data-rt-drop-valid] {
@@ -47,6 +48,14 @@
 
     [data-rt-copied] {
       background-color: rgba(0, 0, 0, .05);
+    }
+
+    [data-rt-tree] li {
+      outline: none !important;
+    }
+
+    [data-rt-tree] li[tabindex="0"]> :first-child {
+      outline: 2px solid blue;
     }
 
     [data-tree-element] {

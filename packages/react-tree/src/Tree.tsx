@@ -3,7 +3,8 @@ import React, {
   ReactNode,
   createContext,
   useContext,
-  useCallback
+  useCallback,
+  CSSProperties
 } from "react";
 import {
   TreeNode,
@@ -11,7 +12,8 @@ import {
   NodeId,
   Node,
   TreeNodeSort,
-  sortTree
+  sortTree,
+  createAlphaNumericSort
 } from "./Node";
 import { TreeElement } from "./TreeElement";
 import { Schema } from "./Schema";
@@ -26,6 +28,18 @@ export interface TreeProps {
    * a state variable so the <Tree/> should always reflect this value.
    */
   nodes: FlatNode[];
+
+  /**
+   * The property on your `FlatNode` which serves as the name. This is text
+   * the user sees for each node and is typically be called `name` or `title`. This
+   * is required to support searching in ARIA and is also used to creating a
+   * sorting function if prop `sortFunction` is not set.
+   *
+   * See:
+   *
+   * https://www.w3.org/TR/wai-aria-practices/examples/treeview/treeview-1/treeview-1b.html#kbd_label
+   */
+  nameProperty: keyof FlatNode;
 
   /**
    * Library users need to implement this and update the nodes with the new value
@@ -47,7 +61,8 @@ export interface TreeProps {
    * the `parentId` has been updated to reference the new parent
    * node `id`.
    *
-   * See the example `handlePaste` function.
+   * See the example code for a possible implementation of the
+   * `handlePaste` function.
    *
    * @param nodes the TreeNode that were copied.
    * @param newParentId the `id` if the node they were copied to.
@@ -113,11 +128,31 @@ export interface TreeProps {
   disableCopy?: boolean;
 
   /**
+   *  The `id` of the node which should be focused, if any. The tree does
+   *  not ensure this node is visible in an expanded parent or perform any
+   *  scrolling. Default behaviour is not to focus any nodes.
+   */
+  initialFocusedNodeId?: NodeId;
+
+  /**
    * Override the browser's default drag image.
    *
    * @param nodes the ids of the Nodes that are being dragged
    */
   renderDragImage?(nodes: NodeId[]): HTMLImageElement | HTMLCanvasElement;
+
+  /**
+   * The ARIA label ID. This should be the ID of heading element which explains
+   * what the tree is used for. This element can be visually hidden if necessary
+   * but needs to present in ARIA.
+   *
+   * See:
+   *
+   * https://www.w3.org/TR/wai-aria-practices/examples/treeview/treeview-1/treeview-1b.html#kbd_label
+   * https://a11yproject.com/posts/how-to-hide-content/
+   *
+   */
+  labelledbyId?: string;
 }
 
 export interface TreeContextValue {
@@ -140,12 +175,21 @@ export const TreeContext = createContext<TreeContextValue | undefined>(
 
 export const useTree = () => useContext(TreeContext);
 
+const ListStyle: CSSProperties = {
+  padding: 0
+};
+
+const ListItemStyle: CSSProperties = {
+  listStyle: "none"
+};
+
 /**
  * See docs on `TreeProps`.
  */
 export const Tree = (props: TreeProps) => {
   const {
     nodes,
+    nameProperty,
     renderElement,
     onChange,
     onPaste,
@@ -157,7 +201,9 @@ export const Tree = (props: TreeProps) => {
     disableMultiSelection,
     disableCut,
     disableCopy,
-    renderDragImage
+    renderDragImage,
+    initialFocusedNodeId,
+    labelledbyId
   } = props;
   const treeNodes = toTreeNodes(nodes);
   const [dragId, setDragId] = useState<NodeId>();
@@ -165,13 +211,24 @@ export const Tree = (props: TreeProps) => {
 
   if (sortFunction) {
     sortTree(treeNodes, sortFunction);
+  } else {
+    sortTree(treeNodes, createAlphaNumericSort(nameProperty));
   }
 
-  const { selection, handleClick, handleSelectionChange } = useSelectionState(
+  const initialSelection =
+    initialFocusedNodeId !== undefined ? [initialFocusedNodeId!] : [];
+
+  const {
+    selection,
+    handleClick,
+    handleSelectionChange,
+    handleBlur
+  } = useSelectionState(
     treeNodes,
     onSelectionChange,
     disableSelection,
-    disableMultiSelection
+    disableMultiSelection,
+    initialSelection
   );
 
   const selected = [...selection.selected, dragId as NodeId];
@@ -232,6 +289,7 @@ export const Tree = (props: TreeProps) => {
   useKeyboard(
     treeNodes,
     selection,
+    nameProperty,
     handleSelectionChange,
     handlePasteNodes,
     handleToggleCollapse,
@@ -270,28 +328,46 @@ export const Tree = (props: TreeProps) => {
   const renderTree = useCallback(
     (nodes: TreeNode[], depth = 0) => {
       const result: ReactNode[] = [];
-      nodes.forEach((node) => {
+      nodes.forEach((node, index) => {
         const nodeItem = renderElement(node, depth);
         let children: ReactNode[] = [];
-        if (node.expanded === undefined || node.expanded) {
+        const expanded = node.expanded === undefined || node.expanded;
+        if (expanded) {
           children = renderTree(node.children, depth + 1);
         }
         const props: any = {};
         if (node.id === overId && overId !== node.parentId) {
           props["data-rt-drop-valid"] = true;
         }
+        if (node.children.length) {
+          props["aria-expanded"] = expanded;
+        }
+        const focused = selection.focused && node.id === selection.selected[0];
         result.push(
-          <div data-rt-element-wrapper={node.id} {...props}>
+          <li
+            data-rt-element-wrapper={node.id}
+            role="treeitem"
+            aria-level={depth + 1}
+            aria-setsize={nodes.length}
+            aria-posinset={index + 1}
+            tabIndex={focused ? 0 : -1}
+            {...props}
+            style={ListItemStyle}
+          >
             <TreeElement node={node} depth={depth}>
               {nodeItem}
             </TreeElement>
-            {children}
-          </div>
+            {children && (
+              <ul role="group" style={ListStyle}>
+                {children}
+              </ul>
+            )}
+          </li>
         );
       });
       return result;
     },
-    [overId, renderElement]
+    [overId, selection, renderElement]
   );
 
   const tree = renderTree(treeNodes);
@@ -312,7 +388,15 @@ export const Tree = (props: TreeProps) => {
 
   return (
     <TreeContext.Provider value={value}>
-      <div data-rt-tree>{tree}</div>
+      <ul
+        data-rt-tree
+        role="tree"
+        style={ListStyle}
+        onBlur={handleBlur}
+        aria-labelledby={labelledbyId}
+      >
+        {tree}
+      </ul>
     </TreeContext.Provider>
   );
 };
