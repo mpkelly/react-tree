@@ -1,6 +1,6 @@
 # react-tree
 
-A React Tree with a sensible API that supports sorting, drag & drop, keyboard navigation and cut/copy/paste while leaving the visual content down to the library user. You can also provide a Schema to control which moves are valid.
+An tiny, accessible React Tree component with a sensible API that supports sorting, drag & drop, keyboard navigation and cut/copy/paste while leaving the visual content entirely to the library user. 
 
 ### Install
 
