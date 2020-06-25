@@ -41,11 +41,13 @@ export const useKeyboard = (
             (steps.current > 0 && delta === -1) ||
             (steps.current < 0 && delta === 1)
           ) {
+            //Selection is decreasing
             handleSelectionChange((current) => ({
               ...current,
               selected: selected.slice(1)
             }));
           } else {
+            //Selection is increasing
             handleSelectionChange((current) => ({
               ...current,
               selected: [next.id, ...selected]
