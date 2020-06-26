@@ -362,6 +362,7 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
             setsize={nodes.length}
             focused={focused}
             nodeItem={nodeItem}
+            key={node.id}
             {...attrs}
           >
             {children}
