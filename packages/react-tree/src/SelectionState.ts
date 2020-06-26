@@ -45,17 +45,20 @@ export const useSelectionState = (
     copied: []
   });
 
-  const handleSelectionChange = (change: handleSelectionChangeType) => {
-    let next = change;
-    if (typeof change === "function") {
-      next = change(selection);
-    }
-    (next as SelectionState).focused = true;
-    setSelection(next);
-    if (onSelectionChange) {
-      onSelectionChange(next as SelectionState);
-    }
-  };
+  const handleSelectionChange = useCallback(
+    (change: handleSelectionChangeType) => {
+      let next = change;
+      if (typeof change === "function") {
+        next = change(selection);
+      }
+      (next as SelectionState).focused = true;
+      setSelection(next);
+      if (onSelectionChange) {
+        onSelectionChange(next as SelectionState);
+      }
+    },
+    [selection, setSelection, onSelectionChange]
+  );
 
   const handleBlur = () => {
     const next: SelectionState = { ...selection, focused: false };

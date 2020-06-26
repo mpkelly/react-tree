@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React, {
   useState,
   ReactNode,
@@ -5,7 +7,8 @@ import React, {
   useContext,
   useCallback,
   CSSProperties,
-  forwardRef
+  forwardRef,
+  memo
 } from "react";
 import {
   TreeNode,
@@ -337,35 +340,26 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
         if (expanded) {
           children = renderTree(node.children, depth + 1);
         }
-        const props: any = {};
+        const attrs: any = {};
         if (node.id === overId && overId !== node.parentId) {
-          props["data-rt-drop-valid"] = true;
+          attrs["data-rt-drop-valid"] = true;
         }
         if (node.children.length) {
-          props["aria-expanded"] = expanded;
+          attrs["aria-expanded"] = expanded;
         }
         const focused = selection.focused && node.id === selection.selected[0];
         result.push(
-          <li
-            data-rt-element-wrapper={node.id}
-            role="treeitem"
-            aria-level={depth + 1}
-            aria-setsize={nodes.length}
-            aria-posinset={index + 1}
-            tabIndex={focused ? 0 : -1}
-            {...props}
-            style={ListItemStyle}
-            key={node.id}
+          <ListItem
+            node={node}
+            index={index}
+            depth={depth}
+            setsize={nodes.length}
+            focused={focused}
+            nodeItem={nodeItem}
+            {...attrs}
           >
-            <TreeElement node={node} depth={depth}>
-              {nodeItem}
-            </TreeElement>
-            {children && (
-              <ul role="group" style={ListStyle}>
-                {children}
-              </ul>
-            )}
-          </li>
+            {children}
+          </ListItem>
         );
       });
       return result;
@@ -402,5 +396,51 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
         {tree}
       </ul>
     </TreeContext.Provider>
+  );
+});
+
+interface ListItemProps {
+  node: TreeNode;
+  index: number;
+  depth: number;
+  setsize: number;
+  focused: boolean;
+  nodeItem: JSX.Element;
+  children?: ReactNode;
+  [key: string]: any;
+}
+
+const ListItem = memo((props: ListItemProps) => {
+  const {
+    node,
+    index,
+    depth,
+    setsize,
+    focused,
+    nodeItem,
+    children,
+    ...rest
+  } = props;
+  return (
+    <li
+      data-rt-element-wrapper={node.id}
+      role="treeitem"
+      aria-level={depth + 1}
+      aria-setsize={setsize}
+      aria-posinset={index + 1}
+      tabIndex={focused ? 0 : -1}
+      {...rest}
+      style={ListItemStyle}
+      key={node.id}
+    >
+      <TreeElement node={node} depth={depth}>
+        {nodeItem}
+      </TreeElement>
+      {children && (
+        <ul role="group" style={ListStyle}>
+          {children}
+        </ul>
+      )}
+    </li>
   );
 });
