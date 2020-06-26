@@ -110,7 +110,7 @@ const flatNodes: FlatNode[] = [
     expanded: true,
     type: Type.Folder,
     
-    //Note how FlatNode supports any arbitrary properties
+    //Note how FlatNode supports arbitrary properties
     name: "Folder one",
   },
   {
@@ -150,58 +150,57 @@ React Tree doesn't provide styling because it doesn't render anything visible by
 
 ```CSS
  
-    // This attribute is set on a node when another node that it can accept as a child is dragged over it - you will want to use some visual indicator so the user knows they can release
-    [data-rt-drop-valid] {
-      background-color: rgba(0, 0, 0, .1);
-    }
+// This attribute is set on a node when another node that it can accept as a child is dragged over it - you will want to use some visual indicator so the user knows they can release
+[data-rt-drop-valid] {
+  background-color: rgba(0, 0, 0, .1);
+}
 
-    // Set on nodes which have been selected by clicking to using cursor.
-    // More than one node can be selected unless `disableMultipleSelection` is set.
-    [data-rt-selected] {
-      background-color: rgba(0, 0, 0, .2);
-    }
+// Set on nodes which have been selected by clicking to using cursor.
+// More than one node can be selected unless `disableMultipleSelection` is set.
+[data-rt-selected] {
+  background-color: rgba(0, 0, 0, .2);
+}
 
-    // Attribute added to nodes that have been cut (ctrl+x) but not yet pasted
-    [data-rt-cut] {
-      opacity: .4
-    }
+// Attribute added to nodes that have been cut (ctrl+x) but not yet pasted
+[data-rt-cut] {
+  opacity: .4
+}
 
-    // Attribute added to nodes that have been copied (ctrl+c) but not yet pasted
-    [data-rt-copied] {
-      background-color: rgba(0, 0, 0, .05);
-    }
+// Attribute added to nodes that have been copied (ctrl+c) but not yet pasted
+[data-rt-copied] {
+  background-color: rgba(0, 0, 0, .05);
+}
 
-    // Applied to the <TreeElement/> wrapper `div` which wraps the UI you render for each Node with `renderElement`
-    // This wrapper will include child <TreeElement/>s  if present
-    [data-rt-element-wrapper] {
+// Applied to the <TreeElement/> wrapper `div` which wraps the UI you render for each Node with `renderElement`
+// This wrapper will include child <TreeElement/>s  if present
+[data-rt-element-wrapper] {
 
-    }
+}
 
-    // Applied to a single <TreeElement/> that you render for each Node with `renderElement`
-    [data-rt-element] {
+// Applied to a single <TreeElement/> that you render for each Node with `renderElement`
+[data-rt-element] {
 
-    }
+}
 
-    // Output on the above wrappper allowing you target specific types
-    [data-rt-type="type"] {
+// Output on the above wrappper allowing you target specific types
+[data-rt-type="type"] {
 
-    }
+}
 
-    // Also output on the wrapper with the node's depth in the tree
-    [data-rt-depth="0"] {
+// Also output on the wrapper with the node's depth in the tree
+[data-rt-depth="0"] {
 
-    }
+}
 
+// set on the <CollapseToggle/> wrapper with value true or false according to `Node.expanded`
+[data-rt-collapsed="false"] {
+  transform: rotate(90deg);
+}
 
-    // set on the <CollapseToggle/> wrapper with value true or false according to `Node.expanded`
-    [data-rt-collapsed="false"] {
-      transform: rotate(90deg);
-    }
-   
-    // always set on the <CollapseToggle/> wrapper element
-    [data-rt-collapse-toggle] {
-      transition: transform .3s;
-    }
+// always set on the <CollapseToggle/> wrapper element
+[data-rt-collapse-toggle] {
+  transition: transform .3s;
+}
 
 ```
 
