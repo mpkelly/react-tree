@@ -137,4 +137,4 @@ export declare const useTree: () => TreeContextValue;
 /**
  * See docs on `TreeProps`.
  */
-export declare const Tree: (props: TreeProps) => JSX.Element;
+export declare const Tree: React.ForwardRefExoticComponent<TreeProps & React.RefAttributes<HTMLUListElement>>;
