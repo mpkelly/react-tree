@@ -10,7 +10,7 @@ import {
   NodeId,
   toFlatNodes
 } from "../src";
-import { useSelectionState, SelectionState } from "../src/SelectionState";
+import { SelectionState } from "../src/SelectionState";
 
 enum Type {
   File,

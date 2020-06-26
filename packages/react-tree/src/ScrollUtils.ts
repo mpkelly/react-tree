@@ -35,9 +35,16 @@ export const scrollFocusedNodeIntoViewIfNecessary = (
       const container = document.querySelector(selector) as HTMLElement;
       if (container) {
         const { overflow } = container.style;
-        container.style.overflow = "hidden";
+        let previousOverflow: string | null = null;
+        if (overflow !== "hidden") {
+          previousOverflow = overflow;
+          container.style.overflow = "hidden";
+        }
         setTimeout(() => {
-          container.style.overflow = overflow;
+          if (previousOverflow !== null) {
+            container.style.overflow = previousOverflow;
+          }
+
           if (element) {
             scrollIntoView(element, scrollOptions);
           }
@@ -57,15 +64,17 @@ export const scrollFocusedNodeIntoViewIfNecessary = (
 export const disableScrollingUntilNextTick = (selector: string) => {
   const container = document.querySelector(selector) as HTMLElement;
   const { overflow } = container.style;
+  if (overflow === "hidden") {
+    return;
+  }
   container.style.overflow = "hidden";
   setTimeout(() => {
-    container.style.overflow = overflow;
+    container.style.overflow = "auto";
   }, 1);
 };
 
 /**
- * Ensure a node is visible. This is done on the next tick so the DOM has time to
- * update.
+ * Ensure a node is visible.
  *
  * @param id the `id` of the node to scroll to if necessary
  * @param scrollOptions the scroll options for
@@ -78,10 +87,6 @@ export const ensureInView = (
 ) => {
   const element = document.querySelector(`[data-rt-element="${id}"]`);
   if (element) {
-    setTimeout(() => {
-      if (element) {
-        scrollIntoView(element, scrollOptions);
-      }
-    }, 1);
+    scrollIntoView(element, scrollOptions);
   }
 };

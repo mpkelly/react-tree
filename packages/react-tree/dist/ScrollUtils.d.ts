@@ -26,8 +26,7 @@ export declare const scrollFocusedNodeIntoViewIfNecessary: (selection: Selection
  */
 export declare const disableScrollingUntilNextTick: (selector: string) => void;
 /**
- * Ensure a node is visible. This is done on the next tick so the DOM has time to
- * update.
+ * Ensure a node is visible.
  *
  * @param id the `id` of the node to scroll to if necessary
  * @param scrollOptions the scroll options for
