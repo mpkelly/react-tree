@@ -5,3 +5,4 @@ export * from "./TreeUtils";
 export * from "./TreeElement";
 export * from "./Schema";
 export * from "./CollapseToggle";
+export { SelectionState } from "./SelectionState";

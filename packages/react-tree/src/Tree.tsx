@@ -4,7 +4,8 @@ import React, {
   createContext,
   useContext,
   useCallback,
-  CSSProperties
+  CSSProperties,
+  forwardRef
 } from "react";
 import {
   TreeNode,
@@ -186,7 +187,7 @@ const ListItemStyle: CSSProperties = {
 /**
  * See docs on `TreeProps`.
  */
-export const Tree = (props: TreeProps) => {
+export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
   const {
     nodes,
     nameProperty,
@@ -391,6 +392,7 @@ export const Tree = (props: TreeProps) => {
   return (
     <TreeContext.Provider value={value}>
       <ul
+        ref={ref}
         data-rt-tree
         role="tree"
         style={ListStyle}
@@ -401,4 +403,4 @@ export const Tree = (props: TreeProps) => {
       </ul>
     </TreeContext.Provider>
   );
-};
+});
