@@ -2,13 +2,15 @@
 
 An tiny, accessible React Tree component with a sensible API that supports sorting, drag & drop, keyboard navigation and cut/copy/paste while leaving the visual content entirely to the library user. 
 
+This tree is intended for file systems and the like. It will be comfortable with thousands of nodes but is not virtualized and not intended for use with massive data sets. 
+
 ### Install
 
 `npm i @mpkelly/react-tree`
 
 ### Demos
 
-- [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/file-browser/FileBrowser.tsx)
+- [File browser demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/file-browser/FileBrowser.tsx)
 - Lazy children demo
 - [Journal example](https://github.com/mpkelly/Journal/blob/ab927cb481f60459d50a58012b89795aa33bfa47/packages/journal/src/features/collections-tree/CollectionsTree.tsx#L39)
 
