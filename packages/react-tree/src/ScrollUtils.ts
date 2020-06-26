@@ -14,10 +14,10 @@ export const DefaultScrollOptions: ScrollOptions = {
  * scroll to that node. This scrolling is clunky by default and often uncessesary.
  * Using this utility function you avoid scrolling except when absolutely necessary
  * thanks to the package `scroll-into-view-if-needed`. You need to call
- * this method when `onSelectionState` fires and pass in the `SelectionState`.
- * You also need to include a query selector for the scroll container.
+ * this method when `onSelectionChange` fires and pass in the `SelectionState`.
+ * You also need to include a query selector for the scroll container the tree is in.
  *
- * @param selection the `SelectionState` passed to the  `onSelectionState` callback.
+ * @param selection the `SelectionState` passed to the  `onSelectionChange` callback.
  * @param selector the selector that uniquely identifies the tree's scroll container.
  * @param scrollOptions optional - the scroll options for
  * library `scroll-into-view-if-needed`. Default behaviour is to scroll to the `nearest`
