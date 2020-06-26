@@ -1,6 +1,6 @@
 {
   "name": "@mpkelly/react-tree",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Drag and drop tree for ReactJS",
   "keywords": [
     "react",
