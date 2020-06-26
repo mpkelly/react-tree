@@ -52,9 +52,15 @@ export interface TreeProps {
    *
    * @param node The node that changed.
    * @param property The property that changed
-   * @param value The new value
+   * @param value The new value to be applied to the changed nodes
+   * @param selection The `SelectionState` at the time of the change
    */
-  onChange?(nodes: FlatNode[], property: keyof FlatNode, value: any): void;
+  onChange?(
+    nodes: FlatNode[],
+    property: keyof FlatNode,
+    value: any,
+    selection: SelectionState
+  ): void;
 
   /**
    * Library users need to implement this unless `disableCopy` is set to true. This
@@ -256,7 +262,7 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
           schema
         )
       ) {
-        onChange(changed, "parentId", target);
+        onChange(changed, "parentId", target, selection);
       }
     } else {
       if (!onPaste) {
@@ -286,7 +292,7 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
 
   const handleToggleCollapse = (nodes: Node[]) => {
     if (onChange) {
-      onChange(nodes, "expanded", !nodes[0].expanded);
+      onChange(nodes, "expanded", !nodes[0].expanded, selection);
     }
   };
 
@@ -313,7 +319,7 @@ export const Tree = forwardRef<HTMLUListElement, TreeProps>((props, ref) => {
           const changed = changedIds.map((id) =>
             nodes.find((node) => node.id === id)
           ) as FlatNode[];
-          onChange(changed, "parentId", target);
+          onChange(changed, "parentId", target, selection);
         }
       }
     }

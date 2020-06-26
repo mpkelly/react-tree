@@ -26,9 +26,10 @@ export interface TreeProps {
      *
      * @param node The node that changed.
      * @param property The property that changed
-     * @param value The new value
+     * @param value The new value to be applied to the changed nodes
+     * @param selection The `SelectionState` at the time of the change
      */
-    onChange?(nodes: FlatNode[], property: keyof FlatNode, value: any): void;
+    onChange?(nodes: FlatNode[], property: keyof FlatNode, value: any, selection: SelectionState): void;
     /**
      * Library users need to implement this unless `disableCopy` is set to true. This
      * is called after copy only. Cut and pasted nodes are handled using `onChange`.

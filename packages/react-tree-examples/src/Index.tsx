@@ -1,16 +1,23 @@
-import React, { ReactNode, SVGProps, useState, useCallback } from "react";
+import React, {
+  ReactNode,
+  SVGProps,
+  useState,
+  useCallback,
+  Fragment,
+} from "react";
 import { render } from "react-dom";
 import {
   TreeNode,
   FlatNode,
   createAlphaNumericSort,
-  Tree,
+  ScrollableTree,
   CollapseToggle,
   Schema,
   NodeId,
-  toTreeNodes,
-  toFlatNode,
   toFlatNodes,
+  SelectionState,
+  scrollFocusedNodeIntoViewIfNecessary,
+  disableScrollingUntilNextTick,
 } from "@mpkelly/react-tree";
 
 // THE DATA
@@ -192,6 +199,35 @@ const App = () => {
     setNodes((nodes) => nodes.concat(toFlatNodes(newNodes, parentId)));
   };
 
+  const handleAddNodes = () => {
+    const newNodes: FlatNode[] = [];
+
+    Array.from({ length: 10 }).forEach((_folder) => {
+      const folderId = id++;
+      const folder = {
+        id: folderId,
+        expanded: true,
+        parentId: 0,
+        type: Type.Folder,
+        name: "Folder " + folderId,
+      };
+      nodes.push(folder);
+      Array.from({ length: 99 }).forEach((_file) => {
+        const nextId = id++;
+        const file = {
+          id: nextId,
+          parentId: folderId,
+          expanded: true,
+          type: Type.File,
+          name: "File " + nextId,
+        };
+        nodes.push(file);
+      });
+    });
+
+    setNodes((nodes) => nodes.concat(newNodes));
+  };
+
   const renderElement = (node: TreeNode, depth: number) => {
     switch (node.type) {
       case Type.Folder:
@@ -203,15 +239,21 @@ const App = () => {
   };
 
   return (
-    <Tree
-      nodes={nodes}
-      schema={FileSystemSchema}
-      renderElement={renderElement}
-      sortFunction={createAlphaNumericSort("name")}
-      onChange={handleChange}
-      onPaste={handlePaste}
-      nameProperty="name"
-    />
+    <Fragment>
+      <button onClick={handleAddNodes} style={{ margin: 8 }}>
+        add 1000 nodes
+      </button>
+      <ScrollableTree
+        nodes={nodes}
+        schema={FileSystemSchema}
+        renderElement={renderElement}
+        sortFunction={createAlphaNumericSort("name")}
+        onChange={handleChange}
+        onPaste={handlePaste}
+        nameProperty="name"
+        style={{ height: 500, padding: 8, maxWidth: 240 }}
+      />
+    </Fragment>
   );
 };
 

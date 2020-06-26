@@ -32,6 +32,7 @@
     "implicit-arrow-linebrea": "off",
     "react/jsx-props-no-spreading": "off",
     "implicit-arrow-linebreak": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "no-plusplus": "off"
   }
 }

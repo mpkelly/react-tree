@@ -75,5 +75,8 @@
     "*.jest.ts",
     "*.testcafe.ts"
   ],
-  "gitHead": "bcb9141f564feca6faad81c1641f89372ef9924d"
+  "gitHead": "bcb9141f564feca6faad81c1641f89372ef9924d",
+  "dependencies": {
+    "scroll-into-view-if-needed": "^2.2.25"
+  }
 }

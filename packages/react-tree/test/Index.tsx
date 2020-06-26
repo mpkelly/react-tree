@@ -4,7 +4,7 @@ import {
   TreeNode,
   FlatNode,
   createAlphaNumericSort,
-  Tree,
+  ScrollableTree as Tree,
   CollapseToggle,
   Schema,
   NodeId,
