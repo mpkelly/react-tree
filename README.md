@@ -14,7 +14,7 @@ An tiny, accessible React Tree component with a sensible API that supports sorti
 
 ### Features
 
-- [x] Tiny bundle size - zero dependencies other than React
+- [x] Tiny bundle size - 5.8kB gzipped
 - [x] TypeScript & JavaScript support
 - [x] Basic drag & drop support
 - [x] Simple list data model
