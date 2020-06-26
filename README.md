@@ -8,7 +8,7 @@ An tiny, accessible React Tree component with a sensible API that supports sorti
 
 ### Demos
 
-- [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/App.tsx)
+- [Simple demo](https://codesandbox.io/s/fervent-wave-u7psb?file=/src/file-browser/FileBrowser.tsx)
 - Lazy children demo
 - [Journal example](https://github.com/mpkelly/Journal/blob/ab927cb481f60459d50a58012b89795aa33bfa47/packages/journal/src/features/collections-tree/CollectionsTree.tsx#L39)
 
@@ -26,9 +26,29 @@ An tiny, accessible React Tree component with a sensible API that supports sorti
 - [x] Keyboard support, including navigating, selecting, copying/cutting and pasting
 - [x] Implement W3C's [Tree View accessibility specification](https://www.w3.org/TR/wai-aria-practices/#TreeView)
 - [ ] Dropping at precise locations in target
-- [ ] Performance testing and optimisation
 
 I wrote this for [Journal](https://github.com/mpkelly/Journal), another side-project of mine, and didn't need to drop a precise locations but may add this in future.
+
+### Quick Start
+
+
+
+```TypeScript
+
+// Use `ScrollableTree` which wraps the `Tree` in a scroll container 
+// but also fixes various scrolling/focusing quirks. 
+
+import {ScrollableTree as Tree} from "@mpkelly/react-tree";
+
+<Tree
+  nodes={nodes}
+  schema={FileSystemSchema}
+  renderElement={renderElement}
+  onChange={handleChange}
+  onPaste={handlePaste}
+  nameProperty="name"
+/>
+```
 
 ### API
 
@@ -183,22 +203,7 @@ React Tree doesn't provide styling because it doesn't render anything visible by
 
 ```
 
-#### Mutating your state
-
-The `onChange` callback should look something like this:
-
-```TypeScript
-  const handleChange = (
-    changed: FlatNode,
-    property: keyof FlatNode,
-    value: any
-  ) => {
-    const nextNode = {...node, [property]:value};
-   
-    //call setState or whatever
-    handleNodeChange(nextNode);
-  };
-```
+#### Deleting a node and all of its children
 
 React Tree also exports some utilities that can help you delete a `FlatNode` and its children. An example:
 
@@ -225,4 +230,4 @@ if (result && result.node) {
 
 #### Tree
 
-View the full [Tree API](https://github.com/mpkelly/react-tree/blob/master/packages/react-tree/src/Tree.tsx). Note how most properties are optional.
+View the full [Tree API](https://github.com/mpkelly/react-tree/blob/master/packages/react-tree/src/Tree.tsx).
