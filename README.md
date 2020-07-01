@@ -187,11 +187,6 @@ React Tree doesn't provide styling because it doesn't render anything visible by
 
 }
 
-// Also output on the wrapper with the node's depth in the tree
-[data-rt-depth="0"] {
-
-}
-
 // set on the <CollapseToggle/> wrapper with value true or false according to `Node.expanded`
 [data-rt-collapsed="false"] {
   transform: rotate(90deg);
